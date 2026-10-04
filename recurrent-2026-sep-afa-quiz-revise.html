@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SEP & AFA Quiz & Revision – Recurrent 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F4; --paper:#FFFFFF; --ink:#1B2433; --muted:#5E6573; --line:#D3D9E3;
+  --afa:#C62E3A; --sep:#E8601C; --main:#13294B; --ok:#1E7B4F; --okbg:#E3F3EA; --bad:#B3261E; --badbg:#FBE6E4; --rep:#B26A00; --repbg:#FFF3DC;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){ --bg:#0E1726; --paper:#172338; --ink:#E7EEF7; --muted:#9AAABF; --line:#2A3A55; --main:#6E93D6; --okbg:#173A2A; --badbg:#3D1D1D; --ok:#5FD39A; --bad:#FF8A80; --rep:#FFB547; --repbg:#3A2C12; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Barlow,"Segoe UI",Arial,sans-serif;font-size:17px;line-height:1.45}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 48px;display:flex;flex-direction:column;gap:16px}
+h1{font-family:"Barlow Condensed","Arial Narrow",sans-serif;font-weight:700;font-size:2.1rem;line-height:1.05;margin:4px 0 0}
+h2{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.5rem;margin:0}
+h3{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:1.2rem;margin:18px 0 6px}
+.sub{color:var(--muted);margin:6px 0 0;font-size:.95rem}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tab{font:600 1.05rem Barlow,sans-serif;padding:12px;border-radius:10px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.tab[aria-selected="true"]{background:var(--main);border-color:var(--main);color:#fff}
+.panel{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:18px}
+.label{font-weight:600;margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.chip{border:1.5px solid var(--line);background:var(--paper);color:var(--ink);font:600 .92rem Barlow,sans-serif;padding:7px 13px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+button.main{font:600 1.05rem Barlow,sans-serif;padding:14px 18px;border-radius:10px;border:0;background:var(--main);color:#fff;cursor:pointer;width:100%}
+button.ghost{font:600 1rem Barlow,sans-serif;padding:12px 16px;border-radius:10px;border:1.5px solid var(--line);background:var(--paper);color:var(--ink);cursor:pointer}
+.status{display:flex;justify-content:space-between;gap:8px;color:var(--muted);font-size:.93rem;flex-wrap:wrap}
+.bar{height:6px;background:var(--line);border-radius:3px;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;width:0;background:var(--main);transition:width .25s}
+.qcard{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+.strip{display:flex;justify-content:space-between;align-items:center;padding:10px 18px;color:#fff;font:600 1rem "Barlow Condensed",sans-serif;background:var(--c,var(--main))}
+.chip.sep[aria-pressed="true"]{background:var(--sep);border-color:var(--sep);color:#fff}
+.chip.afa[aria-pressed="true"]{background:var(--afa);border-color:var(--afa);color:#fff}
+.badge{background:var(--repbg);color:var(--rep);font:600 .85rem Barlow,sans-serif;padding:2px 10px;border-radius:999px}
+.qbody{padding:20px 18px 18px;display:flex;flex-direction:column;gap:14px}
+.q{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:1.45rem;line-height:1.2}
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;gap:12px;align-items:flex-start;text-align:left;font:500 1.02rem Barlow,sans-serif;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer}
+.opt .k{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:.85rem;font-weight:600;color:var(--muted)}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:var(--okbg)} .opt.right .k{border-color:var(--ok);color:var(--ok)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)} .opt.wrong .k{border-color:var(--bad);color:var(--bad)}
+.feedback{border-radius:10px;padding:12px 14px;font-size:.98rem}
+.feedback.ok{background:var(--okbg);border-left:4px solid var(--ok)}
+.feedback.no{background:var(--badbg);border-left:4px solid var(--bad)}
+.feedback b{display:block;margin-bottom:2px}
+.score{font-family:"Barlow Condensed",sans-serif;font-size:3.2rem;font-weight:700;line-height:1}
+.split{display:flex;gap:18px;flex-wrap:wrap;color:var(--muted);margin-top:6px}
+.miss{border-top:1px solid var(--line);padding:12px 0}
+.miss:first-child{border-top:0}
+.miss .mq{font-weight:600} .miss .ma{color:var(--ok);margin-top:4px} .miss .mx{color:var(--muted);font-size:.9rem;margin-top:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap} .row > *{flex:1;min-width:150px}
+.keys{color:var(--muted);font-size:.85rem;text-align:center}
+/* revise */
+.topics{display:flex;flex-wrap:wrap;gap:8px}
+.note{background:var(--paper);border:1.5px solid var(--line);border-radius:14px;padding:4px 18px 16px}
+.note ul{margin:6px 0;padding-left:1.2em} .note li{margin:4px 0}
+.tbl{overflow-x:auto} table{border-collapse:collapse;width:100%;font-size:.95rem;margin:6px 0}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{font-weight:600;color:var(--muted)}
+.qa{list-style:none;margin:0;padding:0}
+.qa li{border-top:1px solid var(--line);padding:10px 0;cursor:pointer}
+.qa li:first-child{border-top:0}
+.qa .a{color:var(--ok);margin-top:3px}
+body.blur .qa .a{filter:blur(6px)} body.blur .qa li.show .a{filter:none}
+.switch{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+button:focus-visible{outline:3px solid var(--sep);outline-offset:2px}
+[hidden]{display:none!important}
+@media (max-width:420px){.q{font-size:1.28rem}}
+@media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>SEP & AFA: quiz & revise</h1>
+  <p class="sub">333 questions from the CSPM, the official briefing questions and your notes. Wrong answers come back later in the round until you get them right. Use Revise to study the key facts first.</p>
+</header>
+
+<div class="tabs" role="tablist">
+  <button class="tab" role="tab" id="tabQuiz" aria-selected="true">Quiz</button>
+  <button class="tab" role="tab" id="tabRev" aria-selected="false">Revise</button>
+</div>
+
+<!-- ========== QUIZ SETUP ========== -->
+<section id="setup">
+  <div class="panel">
+    <p class="label">Subject</p>
+    <div class="chips" id="subjChips"></div>
+    <p class="label">Topic</p>
+    <div class="chips" id="topicChips"></div>
+    <p class="label">Number of questions</p>
+    <div class="chips" id="countChips"></div>
+    <button class="main" id="startBtn">Start quiz</button>
+  </div>
+</section>
+
+<!-- ========== QUIZ ========== -->
+<section id="quiz" hidden>
+  <div>
+    <div class="status"><span id="qCount"></span><span id="qScore"></span></div>
+    <div class="bar" aria-hidden="true"><i id="prog"></i></div>
+  </div>
+  <div class="qcard" style="margin-top:14px">
+    <div class="strip" id="strip"><span id="qTopic"></span><span id="qBadge" class="badge" hidden>Repeat</span></div>
+    <div class="qbody">
+      <div class="q" id="qText"></div>
+      <div class="opts" id="opts" role="group" aria-label="Answer options"></div>
+      <div id="fb" class="feedback" hidden aria-live="polite"></div>
+      <div class="row">
+        <button class="ghost" id="quitBtn">End quiz</button>
+        <button class="main" id="nextBtn" hidden>Next question</button>
+      </div>
+    </div>
+  </div>
+  <p class="keys">Keyboard: 1–4 to answer, Enter for next</p>
+</section>
+
+<!-- ========== RESULTS ========== -->
+<section id="results" hidden>
+  <div class="panel">
+    <h2>Round complete</h2>
+    <div class="score" id="rScore" style="margin-top:8px"></div>
+    <div class="split" id="rSplit"></div>
+  </div>
+  <div class="row">
+    <button class="main" id="retryBtn">Quiz me on my mistakes</button>
+    <button class="ghost" id="newBtn">New quiz</button>
+  </div>
+  <div class="panel" id="missPanel">
+    <h2 style="font-size:1.25rem;margin-bottom:6px">Revise your mistakes</h2>
+    <div id="missList"></div>
+  </div>
+</section>
+
+<!-- ========== REVISE ========== -->
+<section id="revise" hidden>
+  <div class="panel">
+    <p class="label">Subject</p>
+    <div class="chips" id="revSubj"></div>
+    <p class="label">Choose what to revise</p>
+    <div class="topics" id="revChips"></div>
+  </div>
+  <div id="revBody" style="margin-top:14px"></div>
+</section>
+</div>
+
+<script>
+/* [subject, topic, question, correct, wrong1, wrong2, wrong3, note?] */
+const BANK = [["SEP", "Crew fitness", "How long after a local anaesthetic may a crew member fly?", "12 hours", "6 hours", "24 hours", "48 hours"], ["SEP", "Crew fitness", "How long after a general, spinal or epidural anaesthetic may a crew member fly?", "48 hours", "12 hours", "24 hours", "72 hours"], ["SEP", "Crew fitness", "A crew member did a deep dive. After how many hours can they fly?", "24 hours", "12 hours", "48 hours", "72 hours"], ["SEP", "Crew fitness", "How many hours after blood donation may cabin crew return to flying?", "24 hours", "12 hours", "48 hours", "72 hours", "CSPM 1.7.2 and 1.19.6. The 72-hour answer in some notes is wrong."], ["SEP", "Crew fitness", "Alcohol must not be consumed within how many hours of report time?", "12 hours", "8 hours", "10 hours", "24 hours"], ["SEP", "Crew fitness", "A cabin crew member may not operate when over how many weeks pregnant?", "16 weeks", "12 weeks", "20 weeks", "24 weeks"], ["SEP", "Crew fitness", "A crew member's licence requires corrective lenses. What must they carry?", "A spare pair of spectacles", "A copy of their prescription", "Spare contact lenses only", "Nothing extra"], ["SEP", "Crew rules", "What is the minimum cabin crew complement on the B737-800/8/9?", "4", "3", "5", "6"], ["SEP", "Crew rules", "Can a flydubai flight depart an outstation with three cabin crew to return to DXB?", "Yes, if authorised by the NCC Duty Manager, with max 50 passengers per crew member", "Yes, if the Commander agrees, with max 60 passengers per crew member", "Yes, with no passenger limit", "No, never"], ["SEP", "Crew rules", "Who comes directly after the First Officer in the chain of command?", "SCCM", "CCM2", "Any other Captain", "CCM3"], ["SEP", "Briefing", "What is the cabin crew report time?", "60 minutes before departure", "45 minutes before departure", "75 minutes before departure", "90 minutes before departure"], ["SEP", "Briefing", "What must the SCCM check regarding the CCQRH at briefing?", "All crew have their CCQRH with a valid revision record page", "The CCQRH is stowed in L1 stowage", "The CCQRH is signed by the Captain", "The latest crew notice is attached"], ["SEP", "Briefing", "In the ALERT 30-second review, what does A stand for?", "Aircraft type", "Alert call", "ABPs", "Armrests"], ["SEP", "Briefing", "In the ALERT 30-second review, what does T stand for?", "Threats", "Time available", "Turbulence", "TOB"], ["SEP", "Crew duties", "Who is responsible for the crew seat check?", "Each crew member checks their own seat", "The SCCM checks all seats", "CCM2 checks all seats", "Engineering only"], ["SEP", "Crew duties", "CCM5 is not carried. Who checks both jump seats next to the L2 door?", "CCM2", "CCM4", "SCCM", "CCM3"], ["SEP", "Crew duties", "What does the crew seat check include?", "Seat pan folds and retracts, harness extends/retracts and inertia reel locks, buckle fastens and unfastens", "Seat pan folds and the life jacket is present", "Harness is clean and the seat cushion is attached", "Buckle fastens and the PBE is present"], ["SEP", "Crew duties", "Who checks the safety equipment in the centre overhead stowages?", "CCM3", "CCM2", "CCM4", "SCCM"], ["SEP", "Crew duties", "Who checks the safety equipment above and below the R2 seat?", "CCM2", "CCM4", "SCCM", "CCM3"], ["SEP", "Crew duties", "Who checks the safety equipment in the overhead lockers of rows 31/32 (33 on B737/9)?", "CCM2", "CCM3", "CCM4", "SCCM"], ["SEP", "Crew duties", "Which door is the SCCM responsible for?", "R1", "L1", "L2", "R2"], ["SEP", "Crew duties", "Which door is CCM3 responsible for?", "L1", "R1", "L2", "R2"], ["SEP", "Crew duties", "What is CCM3's area of responsibility during flight?", "Rows 6–18, over-wing exits and centre overhead stowage", "Rows 19–32", "Rows 1–3, Galley 1 and 2", "Galley 4B, Lavatory D and E"], ["SEP", "Crew duties", "What is CCM4's area of responsibility during flight (B737-8)?", "Rows 19–32", "Rows 6–18", "Rows 1–5", "Galley 4B"], ["SEP", "Crew duties", "Which crew member states the seal colour of the aft FAK to the SCCM after equipment checks?", "CCM2", "CCM4", "CCM3", "CCM5"], ["SEP", "Equipment", "How long does the PBE supply oxygen?", "About 15 minutes", "About 10 minutes", "About 22 minutes", "About 60 minutes"], ["SEP", "Equipment", "What is the pre-flight check of the PBE?", "Correct stowage and quantity; humidity indicator blue or white", "Gauge in the green sector", "Humidity indicator pink", "LED blinks every 3–10 seconds"], ["SEP", "Equipment", "What is the pre-flight check of the fire extinguisher?", "Correct stowage and quantity, gauge in green sector, ring pin through handle and lever, seal intact", "Correct stowage and quantity, gauge at 1500 psi", "Correct stowage and quantity, humidity indicator blue", "Correct stowage only"], ["SEP", "Equipment", "How long does a fire extinguisher discharge for?", "About 10 seconds", "About 5 seconds", "About 20 seconds", "About 30 seconds"], ["SEP", "Equipment", "What is the best distance from the fire when using a fire extinguisher?", "4–6 ft (120–180 cm)", "1–2 ft", "8–10 ft", "10–12 ft"], ["SEP", "Equipment", "What is the pre-flight check of the torch?", "Correct stowage and quantity; LED blinks every 3–10 seconds (observe 2 blinks)", "Switch it on and off", "Battery indicator is green", "Humidity indicator is blue"], ["SEP", "Equipment", "How long does the torch operate?", "At least 30 minutes, up to about 4 hours", "15 minutes", "1 hour exactly", "12 hours"], ["SEP", "Equipment", "A full POCA set to HI (4 L/min) lasts about how long?", "60 minutes", "30 minutes", "120 minutes", "15 minutes"], ["SEP", "Equipment", "A full POCA set to LO (2 L/min) lasts about how long?", "120 minutes", "60 minutes", "90 minutes", "30 minutes"], ["SEP", "Equipment", "What is part of the POCA pre-flight check?", "Gauge above 1500 psi, viewing window red, 2 masks present", "Gauge above 500 psi, 1 mask present", "Viewing window showing 4", "Humidity indicator blue"], ["SEP", "Equipment", "How do you know oxygen is flowing from the POCA?", "Listen for a hissing sound", "The bottle gets warm", "The gauge turns red", "The mask inflates fully"], ["SEP", "Equipment", "Can portable oxygen be used when fighting a fire?", "No, never", "Yes, for the Fire Fighter only", "Yes, on LO flow", "Yes, if the PBE is unserviceable"], ["SEP", "Equipment", "How many portable oxygen bottles (PO2) are on a B737-8?", "6", "4", "8", "12"], ["SEP", "Equipment", "What is the pre-flight check of the megaphone?", "Correct stowage and quantity; squeeze handle and listen for an amplified click", "Switch on and speak a test PA", "Check the battery light is green", "Correct stowage only"], ["SEP", "Equipment", "Where are the megaphones on a B737-8?", "L1 stowage and row 32 DEF overhead locker", "L1 and R1 stowage", "Above L2 and R2 seats", "Centre overhead stowage"], ["SEP", "Equipment", "How long do the emergency lights last on battery power?", "About 10 minutes", "About 5 minutes", "About 20 minutes", "About 60 minutes"], ["SEP", "Equipment", "Where are the emergency light switches?", "Flight deck and Aft Attendant Panel (AAP)", "Forward Attendant Panel only", "Flight deck only", "L1 and R2 doors"], ["SEP", "Equipment", "What is the pre-flight check of the over-wing exit?", "Clear plastic cover over the handle fitted correctly so the interior handle is accessible", "Exit is armed", "Slide pressure in the green band", "Escape strap is attached to the seat"], ["SEP", "Equipment", "What is the pre-flight check of the passenger safety cards?", "One in each seat pocket, correct card for the aircraft, good condition", "One per row", "Correct language for the destination", "Signed by the SCCM"], ["SEP", "Equipment", "What are the normal and overload capacities of the life rafts?", "56 normal / 84 overload", "46 / 69", "50 / 75", "60 / 90"], ["SEP", "Equipment", "How long does the life raft take to inflate?", "About 10 seconds", "About 2 seconds", "About 6 seconds", "About 30 seconds"], ["SEP", "Equipment", "How long does the escape slide take to inflate automatically?", "About 6 seconds", "About 2 seconds", "About 10 seconds", "About 15 seconds"], ["SEP", "Equipment", "What is the age range for the Infant Life Cot (ILC)?", "0 to 18 months", "0 to 12 months", "0 to 24 months", "7 days to 3 years"], ["SEP", "Equipment", "The Infant Life Jacket is for children up to what weight?", "15 kg", "10 kg", "20 kg", "23 kg"], ["SEP", "Equipment", "When is the infant life jacket given to the parent?", "Before take-off, during boarding", "Only in a planned ditching", "After take-off", "When the seatbelt sign comes on for landing"], ["SEP", "Equipment", "How many infant seat belts should be onboard?", "30", "20", "25", "40"], ["SEP", "Equipment", "How many infant life jackets should be onboard?", "20", "15", "30", "25"], ["SEP", "Equipment", "How many quick donning masks are in the flight deck?", "3", "2", "4", "5"], ["SEP", "Oxygen", "At what cabin altitude do the drop-down masks deploy automatically?", "14,000 ft", "10,000 ft", "12,000 ft", "18,000 ft"], ["SEP", "Oxygen", "How long does drop-down oxygen flow?", "About 12 to 22 minutes depending on aircraft", "About 5 minutes", "About 60 minutes", "Until the crew switch it off"], ["SEP", "Oxygen", "How many oxygen masks are connected to each PSU generator?", "4", "2", "3", "5"], ["SEP", "Oxygen", "Why do lavatory and crew station masks have a yellow pull cord?", "So they can be reached from a seated position", "To show they are for crew only", "To start the oxygen flow", "To release the compartment door"], ["SEP", "Oxygen", "The oxygen compartment in the lavatory fails to open. How do you open it?", "Insert a flat tool (safety card or CCQRH back) in the door edge gap and push up on the latch", "Pull the yellow cord", "Ask the flight crew to reset it", "Use the crash axe", "For a PSU door the manual says insert a hairpin or thin rod into the hole."], ["SEP", "Oxygen", "What should cabin crew never do with drop-down masks after deployment?", "Re-stow them", "Pull them down", "Use them themselves", "Tell passengers to use them"], ["SEP", "Boarding", "What must be checked on passenger boarding cards?", "Date, flight number and destination", "Name, seat and gate", "Name, nationality and destination", "Seat, date and baggage allowance"], ["SEP", "Boarding", "What is printed on the boarding card of a passenger who paid for an extra seat for baggage?", "CBBG", "EXST", "HBBG", "INF"], ["SEP", "Boarding", "Can a CBBG be allocated at 17F, one row behind the exit row?", "No, not immediately forward or aft of an exit row (rows 14 or 17)", "Yes, any window seat", "Yes, if the SCCM agrees", "Only on short flights"], ["SEP", "Boarding", "After boarding, what does the SCCM tell the Commander?", "TOB and the number and location of PRMs", "TOB only", "Number of infants and special meals", "Number of bags in the overhead lockers"], ["SEP", "Boarding", "When does the SCCM announce 'All ground staff please leave the aircraft…'?", "After leaving the flight deck and before closing L1", "Before going to the flight deck", "After the doors are armed", "When the safety demo starts"], ["SEP", "Safety demo", "When must the safety demonstration start?", "Promptly after the SCCM calls 'All doors armed and cross-checked'", "Once taxi starts", "Before the doors are closed", "After the welcome PA"], ["SEP", "Safety demo", "The aircraft is delayed 1 hour 15 minutes on stand after the demo. When is another demo done?", "When the aircraft pushes back", "No new demo is needed", "Immediately on stand", "After take-off"], ["SEP", "Safety demo", "An IFE screen is not showing the safety video. What do you do?", "Ask the passenger to view an adjacent screen; if 2 or more adjacent screens fail, SCCM stops the video and a manual demo is done", "Stop the video immediately", "Ignore it if the audio works", "Move the passenger to another row"], ["SEP", "Safety demo", "After a manual demo, what must the demonstrating crew wear while securing the cabin?", "The demonstration life jacket", "The oxygen mask", "Nothing extra", "The PBE"], ["SEP", "Safety demo", "Once the safety video starts, what do crew check?", "All IFE screens show the video and the volume is audible everywhere", "Passengers have headphones on", "All seat belts are fastened", "The overhead lockers are open"], ["SEP", "Normal ops", "When does the SCCM pass 'Cabin secure for take-off' to the flight crew?", "Once the aircraft is moving forward under its own power", "At pushback", "When the doors are closed", "After the safety demo"], ["SEP", "Normal ops", "When does the sterile flight deck period start for landing?", "From the seatbelt sign on for landing (through 10,000 ft) until engine shutdown", "From top of descent until landing", "From 2,000 ft until the aircraft leaves the runway", "From gear down until engine shutdown"], ["SEP", "Normal ops", "When is the sterile flight deck period for take-off?", "From closing the flight deck door for taxi until the release signal on climb (not below 10,000 ft)", "From pushback until gear up", "From the safety demo until 5,000 ft", "From engine start until the seatbelt sign goes off"], ["SEP", "Normal ops", "How are cabin crew told take-off is imminent?", "PA: 'Cabin crew prepare for departure'", "Two chimes", "PA: 'Cabin crew take your seats'", "Seatbelt sign flashes"], ["SEP", "Normal ops", "How often must there be a crew presence in the cabin/galley?", "At least every 10 minutes", "Every 5 minutes", "Every 20 minutes", "Every 30 minutes"], ["SEP", "Normal ops", "How often must the lavatories be monitored?", "Every 20 minutes", "Every 10 minutes", "Every 30 minutes", "Every hour"], ["SEP", "Normal ops", "How often should the crew contact the flight crew in flight?", "Approximately every 20 minutes", "Every 10 minutes", "Every 30 minutes", "Every hour"], ["SEP", "Normal ops", "When can passengers switch on mobile phones after landing?", "Once the aircraft has left the active runway", "At touchdown", "Only when the doors open", "When the seatbelt sign goes off"], ["SEP", "Normal ops", "A T-PED in flight safe mode is classified as?", "N-PED", "C-PED", "M-PED", "Still a T-PED"], ["SEP", "Normal ops", "During CPR onboard, how many crew may continue lifesaving procedures during landing?", "No more than 1", "2", "3", "None"], ["SEP", "Normal ops", "A cart cannot be secured by serviceable galley latches. What must happen?", "It must be offloaded by the caterers before departure", "Wedge it with blankets", "Use it but keep it attended", "Write it in the CDL and depart"], ["SEP", "Normal ops", "A cart brake is unserviceable. What do you do?", "Secure it with serviceable latches, don't use it for service, red tag it, SCCM submits an FR", "Use it only on the ground", "Offload it immediately", "Use it with extra care"], ["SEP", "Normal ops", "What does 'door cover' mean?", "At least one crew member stays near each cross aisle or pair of doors for a rapid evacuation", "A cover is placed over the door handle", "Doors are armed and cross-checked", "The SCCM guards the flight deck door"], ["SEP", "Normal ops", "After shutting off the lavatory water supply, what else must you do?", "Switch off the lavatory water heater", "Lock the lavatory", "Inform engineering on landing only", "Turn off the smoke detector"], ["SEP", "Normal ops", "How do you make an emergency interphone call to the pilots?", "Press 2 three times", "Press 5", "Press 1 and ENTER", "Press 2 once"], ["SEP", "Refuelling", "During refuelling with passengers onboard, the doors must be:", "Disarmed", "Armed", "Closed and armed", "Open with no steps"], ["SEP", "Refuelling", "During refuelling with passengers, seat belts must be:", "Unfastened", "Fastened", "Fastened for infants only", "Removed"], ["SEP", "Refuelling", "Can passengers use T-PEDs during refuelling?", "No", "Yes", "Only in flight mode", "Only mobile phones"], ["SEP", "Refuelling", "Can window blinds be closed during refuelling in summer to keep the cabin cool?", "No, all blinds must be open", "Yes, half of them", "Yes, on the sunny side", "Yes, if the Captain agrees"], ["SEP", "Refuelling", "Where do crew stand during refuelling with passengers onboard?", "CCM3 L1, CCM2 L2, CCM4 row 15, SCCM preferably row 2", "All crew at their doors", "SCCM L1, CCM2 R2, CCM3 and CCM4 at the over-wing exits", "Only the SCCM stays in the cabin"], ["SEP", "Passengers", "From what age can a passenger travel alone?", "12 years", "10 years", "14 years", "16 years"], ["SEP", "Passengers", "What is the minimum age to accompany a child under 12?", "16 years", "18 years", "14 years", "21 years"], ["SEP", "Passengers", "An 11-year-old is travelling alone. What must be done?", "They must be offloaded", "Seat them near the galley", "Assign a crew member to look after them", "Let them travel with a signed form"], ["SEP", "Passengers", "Can a 5-day-old infant travel?", "No, infants under 7 days are not accepted", "Yes, on the parent's lap", "Yes, in a car seat only", "Yes, with a medical certificate"], ["SEP", "Passengers", "How many infants can one passenger accompany?", "Two, if one travels in an approved car type seat", "One only", "Two on the lap", "Three with a car seat"], ["SEP", "Passengers", "What is the maximum number of infants on a flydubai flight?", "20", "15", "25", "30"], ["SEP", "Passengers", "What is the age range for a forward-facing car type seat?", "7 days to 3 years", "0 to 2 years", "6 months to 4 years", "7 days to 6 months"], ["SEP", "Passengers", "What is the age range for a rearward-facing car type seat?", "7 days to 6 months (or under 10 kg)", "7 days to 3 years", "0 to 18 months", "6 months to 2 years"], ["SEP", "Passengers", "When can a pregnant passenger sit in an over-wing exit seat?", "If she does not need an extension seat belt", "Never", "Only before 28 weeks", "Only with a medical certificate"], ["SEP", "Passengers", "What is the minimum age for a passenger seated at an exit?", "16 years", "12 years", "18 years", "21 years"], ["SEP", "Passengers", "An exit row passenger is unwilling to help after the briefing. What do you do?", "Re-seat them away from the over-wing exit", "Brief them again", "Let them stay if the flight is full", "Ask the Captain to speak to them"], ["SEP", "Passengers", "How many PRMs can be carried?", "No more than the number of able-bodied persons who can assist", "Maximum 10", "Maximum 4", "No limit"], ["SEP", "Passengers", "Which animals are permitted in the cabin?", "Falcons and assistance dogs", "Cats and dogs under 8 kg", "Assistance dogs only", "No animals"], ["SEP", "Passengers", "Can an adult escort of a school group sit in the emergency exit row?", "No, children and escorts cannot occupy exit rows", "Yes, if over 18", "Yes, if briefed", "Only one escort per exit"], ["SEP", "Turbulence", "What does the flight crew tell you when turbulence is expected?", "Time available to secure the cabin, level and expected duration", "Altitude and speed", "Cause of turbulence only", "Only the level"], ["SEP", "Turbulence", "What are the three levels of turbulence?", "Light, moderate and severe", "Low, medium and high", "Mild, strong and extreme", "Light, heavy and clear air"], ["SEP", "Turbulence", "Is cabin service permitted in moderate unexpected turbulence?", "No cabin service is permitted", "Cold drinks only", "Food only", "Yes, with care"], ["SEP", "Turbulence", "What service is allowed in light turbulence?", "Food and cold drinks may continue, no hot drinks", "No service at all", "Full service including hot drinks", "Hot drinks only"], ["SEP", "Decompression", "What is the immediate action of cabin crew in a rapid decompression?", "Put on the nearest drop-down mask, sit down and fasten seat belt", "Go to the flight deck", "Make a PA", "Take a portable oxygen bottle"], ["SEP", "Decompression", "What will crew and passengers experience in a slow decompression?", "Ears popping for no reason and becoming progressively tired without realising", "Loud bang and mist", "Masks dropping", "Objects flying around the cabin"], ["SEP", "Decompression", "What happens when cabin altitude exceeds 14,000 ft?", "Masks drop automatically and an automatic announcement is heard", "The seatbelt sign flashes three times", "The flight crew calls 'Brace'", "Nothing until the crew acts"], ["SEP", "Decompression", "What PA do the pilots make before an emergency descent?", "'This is the Captain. Emergency descent, emergency descent'", "'Cabin crew take your seats'", "'Attention crew at stations'", "'Brace, brace'"], ["SEP", "Decompression", "After a rapid decompression, how do crew know it's safe to move?", "PA 'Senior to the flight deck' or 'Senior to the interphone', or 3 high-low chimes", "When the masks stop flowing", "When the seatbelt sign goes off", "After 12 minutes"], ["SEP", "Decompression", "In a flight deck decompression, what happens to the flight deck door?", "The panels hinge into the flight deck", "The door locks automatically", "The door opens into the cabin", "Nothing"], ["SEP", "Fire", "What are the three elements needed for fire?", "Fuel, heat and oxygen", "Fuel, smoke and heat", "Oxygen, water and heat", "Fuel, oxygen and electricity"], ["SEP", "Fire", "What are the three ways to extinguish a fire?", "Starve the fuel, cool the heat, smother the oxygen", "Cool, cover, call", "Spray, smother, seal", "Remove, report, refill"], ["SEP", "Fire", "Which class of fire is electrical equipment?", "Class E", "Class A", "Class C", "Class F"], ["SEP", "Fire", "Which class of fire is combustible metals (e.g. lithium)?", "Class D", "Class B", "Class E", "Class F"], ["SEP", "Fire", "What is the role of the Fire Fighter?", "Identify source and type, switch off electrics, collect equipment, fight the fire immediately", "Inform the Captain and move passengers", "Bring spare equipment and record times", "Make the PA for medical help"], ["SEP", "Fire", "What is the role of the Communicator?", "Summon a third crew as Coordinator, alert the Commander and keep him informed", "Fight the fire", "Move passengers away", "Fill in the CSR during the fire"], ["SEP", "Fire", "What is the role of the additional (4th) crew member?", "Assist the Coordinator with crowd control and review the fire drill once the fire is out", "Take over as Fire Fighter immediately", "Prepare the doors for evacuation", "Contact the flight deck"], ["SEP", "Fire", "Oven fire: you open the door and there are no flames. What next?", "Check contents for the source, check surroundings, monitor and don't use the oven again", "Close the door and use the oven later", "Discharge an FE anyway", "Pour water into the oven"], ["SEP", "Fire", "How do you fight an overhead stowage fire?", "Open about 2.5 cm, PG and consider PBE, discharge FE and close, wait 30 s, open slowly, remove contents and dampen", "Open fully and pour water", "Keep it closed and wait for landing", "Use portable oxygen"], ["SEP", "Fire", "Flames are on an IFE screen. What do you do?", "Discharge an FE at the unit, switch off power, find the source, don't use the IFE, monitor", "Pour water on the screen", "Switch off and leave it", "Cover it with a blanket"], ["SEP", "Fire", "After a laptop fire is extinguished with an FE, what next?", "Pour water or non-flammable liquid over the device", "Put it in a plastic bag", "Give it back to the passenger", "Store it in the overhead locker"], ["SEP", "Fire", "What do you tell the flight crew immediately about smoke or fumes?", "Source, colour, quantity and passenger reaction", "Only that there is smoke", "Seat number of the passenger", "Time it started"], ["SEP", "Fire", "You smell cigarette smoke in the lavatory. What do you do?", "Immediately check the waste bin and all stowages for a discarded cigarette", "Spray air freshener", "Lock the lavatory", "Inform the Captain only"], ["SEP", "Fire", "The lavatory smoke detector is unserviceable. What happens?", "Lavatory locked, not used by passengers, visual checks every 20 minutes", "It can be used normally", "Crew check it every hour", "Only crew may use it freely"], ["SEP", "Fire", "What is the prime importance with a concealed fire?", "Locating the source of the fire", "Cooling the panels with water", "Moving passengers", "Calling the Captain first"], ["SEP", "Fire", "Signs of smoke in the lavatory detector?", "Horn sound and red light", "Amber light only", "Blue light", "Three chimes"], ["SEP", "Pilot incapacitation", "A pilot is completely incapacitated. Do you remove them from the seat?", "No, never try to remove them", "Yes, immediately", "Yes, if the other pilot agrees", "Only on the ground"], ["SEP", "Pilot incapacitation", "What is the purpose of the inertia reel lock on the pilot seat?", "Locks the shoulder harness to restrict the pilot's movement", "Moves the seat back", "Reclines the seat", "Releases the harness"], ["SEP", "Pilot incapacitation", "Assisting with the landing checklist, which side do you read?", "Left-hand side (challenge side)", "Right-hand side (response side)", "Both sides", "Only the red items"], ["SEP", "Emergency calls", "What are the three alert calls?", "'Senior to the flight deck', 'Senior to the interphone', and 3 high-low chimes", "'Brace brace', 'Evacuate', 'Remain seated'", "'Attention crew at stations', 'Normal operations', 'Brace'", "Two chimes, three chimes, four chimes"], ["SEP", "Emergency calls", "What does hearing 3 high-low chimes in flight mean?", "Senior to the interphone", "Brace for landing", "Cabin crew take your seats", "Release after take-off"], ["SEP", "Emergency calls", "Where must crew report when they hear an alert call in flight?", "L1 door", "Their own door", "The aft galley", "The flight deck"], ["SEP", "Emergency calls", "What briefing does the Commander give the SCCM in an emergency?", "NITS: Nature, Intentions, Time, Supplementary information", "CLEAR", "SBELA", "ALERT"], ["SEP", "Emergency calls", "After receiving NITS, what does the SCCM do next?", "Repeat the NITS briefing back to the Commander", "Brief passengers immediately", "Arm the doors", "Make the brace PA"], ["SEP", "Emergency calls", "What does CLEAR stand for?", "Crew name, Location, Event, Actions taken, Recommendations", "Cabin, Location, Emergency, Area, Response", "Call, Listen, Evaluate, Act, Report", "Crew, Lights, Exits, Arm, Ready"], ["SEP", "Emergency calls", "Which PA tells cabin crew an evacuation is not required?", "'This is the Captain. Normal operations, normal operations'", "'Cabin crew resume duties'", "'Remain seated'", "'Attention crew at stations'"], ["SEP", "Emergency calls", "What are cabin crew actions in a go-around?", "Stay seated, observe passengers, make the go-around PA, call flight crew only if necessary", "Stand up and check the cabin", "Call the flight deck immediately", "Prepare doors for evacuation"], ["SEP", "Emergency calls", "After a rejected take-off you hear 'Attention crew at stations' x2. What do you do?", "Go to your door, check it's armed, evaluate inside and outside, report hazards, wait for instructions", "Evacuate immediately", "Remain seated and do nothing", "Disarm your door"], ["SEP", "Planned emergency", "Who reads the emergency PA in a planned emergency landing?", "SCCM", "CCM2", "The Captain", "CCM3"], ["SEP", "Planned emergency", "After the emergency demo, what are passengers briefed on?", "Seatbelts, Brace, Exits, Lifejackets (if ditching) and ABPs (SBELA)", "Smoking, exits and oxygen", "Seats, baggage, lights", "Only the brace position"], ["SEP", "Planned emergency", "What brace position points must passengers be briefed on?", "When, how and for how long", "Only how", "How and where to look", "When and why"], ["SEP", "Planned emergency", "How long must passengers stay in the brace position?", "Until the aircraft comes to a complete stop", "Until touchdown", "For 30 seconds", "Until the crew shout 'evacuate'"], ["SEP", "Planned emergency", "How many ABPs should be briefed per exit?", "At least 2", "At least 1", "At least 3", "At least 4"], ["SEP", "Planned emergency", "How many ABPs does CCM2 brief, and for which exits?", "At least 4 (2 per exit) for L2 and R2", "2 for L2 only", "4 for the over-wing exits", "6 for all rear doors"], ["SEP", "Planned emergency", "Who briefs ABPs at OWE 15 and 16 ABC in a planned emergency landing?", "CCM3", "CCM2", "CCM4", "SCCM"], ["SEP", "Planned emergency", "When do crew take their seats in a planned emergency landing?", "When the flight crew make the PA 'Cabin crew, take your seats'", "At 500 ft", "At 10,000 ft", "When the SCCM tells them"], ["SEP", "Planned emergency", "How are cabin lights set for a planned emergency landing?", "To match outside conditions", "Fully bright", "Fully off", "Dimmed to night setting always"], ["SEP", "Planned emergency", "What should crew mentally review after taking their seats in a planned emergency?", "The after-touchdown drill", "The service plan", "The fire drill", "The decompression drill"], ["SEP", "Planned emergency", "What PA will the crew hear at 500 ft?", "'This is the Captain, brace, brace' (x2)", "'Cabin crew take your seats'", "'Evacuate, evacuate'", "'Prepare for landing'"], ["SEP", "Planned emergency", "What do crew shout on hearing 'This is the Captain, brace, brace'?", "'Heads down, heads down, brace, brace'", "'Stay calm'", "'Evacuate'", "'Fasten your seat belts'"], ["SEP", "Planned emergency", "Which is a cabin secure item for a planned emergency landing?", "Spectacles and false teeth in the seat pocket inside a sick bag", "Window blinds closed", "Tray tables down", "Passengers wear shoes with heels"], ["SEP", "Planned emergency", "SBELA is done and ABPs are briefed but time remains. What do you do?", "Repeat SBELA and re-brief ABPs", "Start the service", "Sit down and wait", "Disarm the doors"], ["SEP", "Evacuation", "When can cabin crew initiate an evacuation?", "In catastrophic situations (SUDDS)", "Whenever passengers are scared", "Only after the Captain's command", "Only on the ground with engines running"], ["SEP", "Evacuation", "What does SUDDS stand for?", "Self-sustaining fire, Unusual attitude, Dense smoke, Ditching, Sounds of break-up", "Smoke, Unusual noise, Decompression, Door failure, Spillage", "Structural damage, Unconscious pilot, Dense fog, Ditching, Slides", "Slow decompression, Unruly passenger, Damage, Diversion, Smoke"], ["SEP", "Evacuation", "How do passengers leave in a precautionary rapid disembarkation?", "Using ground equipment like jet bridges and stairs", "Using the slides", "Through the over-wing exits", "Through any available exit"], ["SEP", "Evacuation", "What are cabin crew actions after a precautionary landing?", "Stay seated after the aircraft stops and await the Commander's instructions", "Evacuate immediately", "Open all doors", "Disarm doors and disembark"], ["SEP", "Evacuation", "A 'short notice' landing gives up to how many minutes warning?", "Up to 5 minutes", "Up to 10 minutes", "Up to 15 minutes", "Up to 2 minutes"], ["SEP", "Evacuation", "After a land evacuation, where should passengers be directed?", "Upwind, away from the aircraft", "Downwind, near the aircraft", "To the nearest building", "Under the wing for shelter"], ["SEP", "Evacuation", "Your exit is blocked. What command do you shout?", "'Exit blocked, go that way'", "'Stay back'", "'Come this way'", "'Jump, jump'"], ["SEP", "Evacuation", "When are PRMs evacuated?", "Last, so they don't block the exit route", "First", "With their family only", "After the crew"], ["SEP", "Evacuation", "Over-wing exit in an emergency land evacuation: where do passengers go?", "Toward the tail, sliding off the flaps", "Toward the front of the wing", "Into the engine area", "Back into the cabin"], ["SEP", "Ditching", "Who operates which exit in a planned ditching?", "CCM3 L1, SCCM R1, CCM2 left OWE, CCM4 right OWE", "SCCM L1, CCM3 R1, CCM2 L2, CCM4 R2", "CCM2 L1, CCM4 R1, CCM3 both OWEs", "All crew at their normal doors"], ["SEP", "Ditching", "In a planned ditching, where do you send passengers from the over-wing exit?", "Toward the forward edge of the wing and into the water", "Toward the tail", "Back into the cabin", "Onto the engine"], ["SEP", "Ditching", "In a planned ditching on an ETOPS aircraft, where are the rafts launched from?", "L1, R1 and the over-wing exits at rows 15 and 16", "L2 and R2 only", "L1 and R1 only", "All four main doors"], ["SEP", "Ditching", "Planned ditching (ETOPS): when are L1 and R1 disarmed?", "After the NITS briefing", "When the aircraft stops on the water", "At 500 ft", "They stay armed"], ["SEP", "Ditching", "Unplanned ditching with rafts: when are L1 and R1 disarmed?", "When the aircraft comes to a complete stop on the water", "After the NITS briefing", "Before take-off", "They stay armed"], ["SEP", "Ditching", "Unplanned ditching, no rafts, safe to open your exit. In which mode?", "Armed", "Disarmed", "Manual", "Half armed"], ["SEP", "Ditching", "When do cabin crew put on life jackets in an unplanned ditching?", "Right after releasing their harness and standing up", "Before landing", "At 500 ft", "Once outside the aircraft"], ["SEP", "Ditching", "How do crew instruct passengers to assemble in a ditching?", "Away from the aircraft, form a circle or hold onto the slide", "Stay on the wing", "Swim to shore immediately", "Stay inside the aircraft"], ["SEP", "Ditching", "When are escape straps used?", "When crew evacuate through the over-wing exits in a ditching", "In every evacuation", "Only on land", "To tie the raft to the door"], ["SEP", "Survival", "Survived a jungle crash. Best way to attract attention in the dark?", "Make a fire", "Use a mirror", "Shout loudly", "Wave clothing"], ["SEP", "Survival", "What can be used at night to send an SOS to an aircraft?", "Torch", "Mirror", "Sea dye", "Whistle"], ["SEP", "Survival", "What is the biggest threat in water survival?", "Hypothermia", "Sharks", "Dehydration", "Sunburn"], ["SEP", "Survival", "What is the biggest threat in polar survival?", "Frostbite", "Snow blindness", "Hunger", "Wild animals"], ["SEP", "Survival", "In extreme heat, what must the first caution be?", "Protect the head and eyes from the sun", "Drink all water immediately", "Walk to find help", "Remove clothing"], ["SEP", "Survival", "How long do sea dye markers last?", "About 3 hours", "About 30 minutes", "About 12 hours", "About 24 hours"], ["SEP", "Survival", "What are the four survival prospects?", "Protection, Location, Water, Food", "Fire, Shelter, Water, Food", "Shelter, Signal, Search, Sleep", "Water, Food, Rest, Rescue"], ["SEP", "Survival", "What does the ground-to-air signal 'X' mean?", "Require medical assistance", "All is well", "Going this way", "Need food and water"], ["AFA", "Response roles", "What are the 4 cabin crew roles in first aid response?", "First Responder, Back-up, Communicator, Lead", "First Responder, Doctor, Helper, Captain", "Lead, Assistant, Reporter, Observer", "Responder, Medic, Caller, SCCM"], ["AFA", "Response roles", "Who should take the Lead role in first aid?", "The SCCM", "The First Responder", "The Captain", "CCM2"], ["AFA", "Response roles", "What is the role of the First Responder?", "First crew on scene; takes the initial lead and assigns tasks", "Contacts MedLink", "Brings the AED", "Writes the CSR"], ["AFA", "Response roles", "What is the role of the Back-up?", "Supports the First Responder by gathering and using medical equipment", "Informs the Captain", "Moves other passengers", "Makes the PA for a doctor"], ["AFA", "Response roles", "What is the role of the Communicator?", "Handles communication and requests for extra support", "Performs CPR", "Fetches the FAK only", "Leads the response"], ["AFA", "Assessment", "What is the first step of the primary assessment?", "Scene safety (check for danger, wear PPE)", "Check breathing", "Ask SAMPLE questions", "Call MedLink"], ["AFA", "Assessment", "What are your actions in the primary assessment?", "PPE, check response, airway, breathing, circulation", "SAMPLE and DOTS", "Vital signs and history", "Pain scale and temperature"], ["AFA", "Assessment", "How long should you check for signs of breathing in the primary survey?", "Up to 10 seconds", "Up to 5 seconds", "30 seconds", "1 minute"], ["AFA", "Assessment", "What does AVPU stand for?", "Alert, Voice, Pain, Unresponsive", "Airway, Ventilation, Pulse, Unconscious", "Alert, Vital, Pressure, Unstable", "Awake, Verbal, Pupils, Upright"], ["AFA", "Assessment", "What does SAMPLE stand for?", "Signs/symptoms, Allergies, Medications, Past history, Last meal, Events", "Safety, Airway, Movement, Pulse, Level, Eyes", "Symptoms, Age, Medical, Pain, Location, Emergency", "Signs, Assessment, Monitor, Pulse, Look, Evaluate"], ["AFA", "Assessment", "In SAMPLE, what does L stand for?", "Last meal taken", "Level of consciousness", "Location of pain", "Length of illness"], ["AFA", "Assessment", "What does DOTS stand for?", "Deformities, Open wounds, Tenderness, Swelling", "Danger, Oxygen, Time, Safety", "Dizziness, Oedema, Temperature, Shock", "Deformities, Oxygen, Tremor, Sweating"], ["AFA", "Assessment", "What is the secondary assessment used for?", "To gather more information about the ill or injured person", "To check scene safety", "To start CPR", "To decide on diversion"], ["AFA", "Assessment", "How often should you monitor vital signs?", "Every 5 minutes from the initial check", "Every minute", "Every 10 minutes", "Every 20 minutes"], ["AFA", "Assessment", "Which vital signs are monitored every 5 minutes?", "Consciousness, breathing, pulse, temperature and pain", "Blood pressure only", "Breathing only", "Pulse and blood sugar"], ["AFA", "Assessment", "How do you check circulation with capillary refill?", "Press a nailbed until white; colour should return in under 2 seconds", "Press the wrist for 10 seconds", "Count breaths per minute", "Pinch the skin on the hand"], ["AFA", "Assessment", "How do you ask a casualty to rate pain?", "Scale of 1 to 10", "Scale of 1 to 5", "Mild, moderate, severe only", "Scale of 1 to 100"], ["AFA", "Vital signs", "Normal adult breathing rate?", "10 to 20 per minute", "20 to 30 per minute", "30 to 50 per minute", "5 to 10 per minute"], ["AFA", "Vital signs", "Normal breathing rate for children (1 to end of 7th year)?", "20 to 30 per minute", "10 to 20 per minute", "30 to 50 per minute", "40 to 60 per minute"], ["AFA", "Vital signs", "Average adult pulse rate (8 years and above)?", "60 to 80 per minute", "80 to 100 per minute", "100 to 120 per minute", "40 to 60 per minute"], ["AFA", "Vital signs", "Average pulse rate for a child (1 to end of 7th year)?", "80 to 100 per minute", "60 to 80 per minute", "100 to 120 per minute", "120 to 140 per minute"], ["AFA", "Vital signs", "What is normal body temperature?", "36.5 to 37.5°C", "35 to 36°C", "37.5 to 38.5°C", "36 to 36.5°C"], ["AFA", "Vital signs", "What is fever?", "Body temperature above 37.5°C (99.5°F)", "Above 36.5°C", "Above 39°C", "Below 35°C"], ["AFA", "CPR & AED", "A casualty is unresponsive and not breathing. What do you do?", "Start chest compressions", "Place in recovery position", "Give water", "Wait for MedLink"], ["AFA", "CPR & AED", "What is the compression to breath ratio?", "30 compressions : 2 breaths", "15 : 2", "30 : 1", "5 : 1"], ["AFA", "CPR & AED", "How many compressions per minute?", "100 to 120", "60 to 80", "80 to 100", "120 to 150"], ["AFA", "CPR & AED", "How deep are chest compressions for an adult?", "At least 5 cm but not more than 6 cm", "About 4 cm", "About 2 cm", "At least 8 cm"], ["AFA", "CPR & AED", "How deep are chest compressions for a child?", "About 5 cm", "About 2 cm", "About 8 cm", "About 3 cm"], ["AFA", "CPR & AED", "How do you do chest compressions on an infant?", "2-thumb encircling hands technique or heel of one hand", "Two hands on the centre of the chest", "One finger", "Fist on the sternum"], ["AFA", "CPR & AED", "Where do you place your hands for adult compressions?", "2 hands on the centre of the chest", "On the lower abdomen", "On the left side of the chest", "On the upper chest near the neck"], ["AFA", "CPR & AED", "How long should each rescue breath be?", "About 1 second, just enough to see the chest rise", "3 seconds", "5 seconds", "As long as possible"], ["AFA", "CPR & AED", "How do you open an infant's airway for CPR?", "Chin lift manoeuvre (neutral position)", "Full head tilt", "Jaw thrust only", "Turn the head to the side"], ["AFA", "CPR & AED", "Which manoeuvre opens an adult's airway before rescue breaths?", "Head tilt, chin lift", "Jaw thrust", "Abdominal thrust", "Neck lift"], ["AFA", "CPR & AED", "What is the maximum hands-off time in CPR?", "10 seconds", "5 seconds", "20 seconds", "30 seconds"], ["AFA", "CPR & AED", "No pocket mask is available during CPR. What do you do?", "Continue chest compressions", "Stop CPR", "Use a blanket", "Wait for the AED"], ["AFA", "CPR & AED", "No space beside the casualty in the aisle. Where do you position yourself?", "At the head end of the casualty", "Straddle the legs", "Behind the seat", "Don't do CPR"], ["AFA", "CPR & AED", "What does STOP mean for ending CPR?", "Spontaneous breathing, Turned over to emergency services, Operator in danger, Physician advises", "Stop, Think, Observe, Proceed", "Slow pulse, Tired, Oxygen low, Pain", "Seatbelt sign, Touchdown, Oxygen, Pulse"], ["AFA", "CPR & AED", "CPR for 30 minutes with no signs of life and 'no shock advised'. What can you presume?", "The person may be presumed dead and CPR can stop", "Continue until landing", "Give oxygen", "Restart the AED"], ["AFA", "CPR & AED", "How long before the AED reanalyses, and what do you do meanwhile?", "2 minutes; continue CPR", "1 minute; wait", "5 minutes; give breaths only", "30 seconds; check pulse"], ["AFA", "CPR & AED", "The AED says 'Analysing heart rhythm, do not touch the patient'. What do you shout?", "'Stop CPR, stand clear'", "'I'm clear, you're clear, we're all clear'", "'Shock now'", "'Continue CPR'"], ["AFA", "CPR & AED", "The AED advises a shock. What does the operator shout?", "'I'm clear, you're clear, we're all clear!'", "'Stop CPR, stand clear'", "'Analysing'", "'Heads down'"], ["AFA", "CPR & AED", "Using the AED on a 6-year-old. How do you switch to child mode?", "Insert the child key and follow the voice prompts", "Use adult pads lower down", "Press shock twice", "Child mode is not possible"], ["AFA", "CPR & AED", "What is the AED pre-flight check?", "Correct stowage and quantity, blinking green ready light, Fast Response Kit sealed", "Battery above 50%", "Pads attached to the device", "Red light illuminated"], ["AFA", "CPR & AED", "What is in the AED Fast Response Kit?", "Scissors, gloves, razor, pocket mask, small towel", "Bandages and plasters", "Oxygen mask and tubing", "EpiPen and aspirin"], ["AFA", "CPR & AED", "A casualty is in the recovery position. How do you monitor breathing?", "Every minute for 10 seconds", "Every 5 minutes for 30 seconds", "Every 10 minutes", "Only if they cough"], ["AFA", "CPR & AED", "An unconscious casualty is breathing normally. What position?", "Recovery position", "Flat on the back with legs raised", "Sitting upright", "Face down"], ["AFA", "Choking", "A choking casualty can cough or talk. What do you do?", "Encourage them to cough and monitor", "Give back blows immediately", "Abdominal thrusts", "Give water"], ["AFA", "Choking", "Signs of a complete airway blockage?", "Unable to cough, talk or breathe, grasping throat, blue lips", "Loud coughing", "Talking with a hoarse voice", "Sneezing"], ["AFA", "Choking", "An adult choking casualty cannot cough. Immediate action?", "Cycles of 5 back blows then 5 abdominal thrusts", "Abdominal thrusts only", "Finger sweep", "CPR immediately"], ["AFA", "Choking", "A pregnant casualty is choking. What instead of abdominal thrusts?", "Chest thrusts", "Back blows only", "Finger sweep", "Nothing, wait"], ["AFA", "Choking", "A conscious choking infant can't cough. What do you do?", "5 back blows then 5 chest thrusts, repeat", "5 abdominal thrusts", "Finger sweep", "Turn upside down and shake"], ["AFA", "Choking", "A choking casualty becomes unconscious. What do you do?", "Lay flat, call for help and AED, CPR, check the mouth after each set of compressions", "Keep doing back blows", "Place in recovery position", "Give abdominal thrusts lying down"], ["AFA", "Breathing", "Signs of asthma?", "Difficult breathing especially out, dry cough, wheeze, blue lips, anxiety", "Chest pain on the left side", "High fever", "Pain in one leg"], ["AFA", "Breathing", "Where is the asthma pack?", "EMK Red Module 2", "FAK white pouch", "Amenities kit", "UPK"], ["AFA", "Breathing", "The salbutamol inhaler (single use) has been used. Where does it go?", "Back into the EMK, which is then red-sealed", "In the biohazard bag", "Given to the passenger", "In the sharps box"], ["AFA", "Breathing", "Most common sign of anxiety or panic attack?", "Over-breathing (hyperventilation)", "Fever", "Slow pulse", "Rash"], ["AFA", "Breathing", "A hyperventilating passenger doesn't improve when coached to breathe slowly. What do you suspect?", "Hypoxia", "Asthma", "Indigestion", "Stroke"], ["AFA", "Breathing", "What is a sign of prolonged hyperventilation?", "Hypoxia", "Fever", "DVT", "Indigestion"], ["AFA", "Breathing", "You're giving oxygen at high flow and contact MedLink. What should you ask?", "Whether you may reduce the flow from 4 to 2 L/min", "Whether to stop CPR", "Which seat to move them to", "Whether to divert"], ["AFA", "Medical conditions", "Stroke FAST: what does F stand for?", "Facial drooping, usually on one side", "Fever", "Fainting", "Fast pulse"], ["AFA", "Medical conditions", "Stroke FAST: what does S stand for?", "Speech difficulty", "Sweating", "Shock", "Swelling"], ["AFA", "Medical conditions", "What is a stroke?", "A blockage (clot) or rupture (bleed) of an artery in the brain", "A blocked airway", "A heart attack", "Low blood sugar"], ["AFA", "Medical conditions", "Placing a stroke casualty in the recovery position, which side?", "Onto the weak side", "Onto the strong side", "Either side", "Flat on the back"], ["AFA", "Medical conditions", "First actions when a seizure is recognised?", "Note the time, protect the casualty (cushion head), move objects away", "Hold them still", "Put something in their mouth", "Give water"], ["AFA", "Medical conditions", "A child or infant is having a seizure. What extra action?", "Check temperature (and call Ground Medical Support)", "Give aspirin", "Restrain them gently", "Wake them with cold water"], ["AFA", "Medical conditions", "Signs of low blood sugar?", "Hunger, confusion (drunk-like), pale sweaty skin, weak, tremors", "Fever and rash", "Pain in one leg", "Chest pain"], ["AFA", "Medical conditions", "Initial management for an alert casualty with low blood sugar?", "Sweet drinks followed by food", "Insulin", "Oxygen only", "Nothing by mouth"], ["AFA", "Medical conditions", "Which EMK medication is used for low blood sugar?", "Glucose gel", "Salbutamol", "Glyceryl trinitrate", "Telfast"], ["AFA", "Medical conditions", "Swollen lips, blotchy rash, wheezing; passenger has their own EpiPen. What do you advise?", "Advise them to use their own EpiPen", "Wait for MedLink", "Give Telfast", "Give oxygen only"], ["AFA", "Medical conditions", "Severe allergic reaction, no own medication, Ground Medical Support not reachable. What now?", "Give the onboard EpiPen, PA for a medical volunteer, keep trying Ground Medical Support", "Wait for Ground Medical Support", "Give Telfast only", "Do nothing"], ["AFA", "Medical conditions", "Where is the EpiPen?", "EMK Red Module 2", "FAK white pouch", "AED pouch", "Amenities kit"], ["AFA", "Medical conditions", "Medication for mild allergic reactions in the FAK?", "Fexofenadine (Telfast), white pouch", "Aspirin", "Buscopan", "EpiPen"], ["AFA", "Medical conditions", "Signs of DVT?", "Pain and tenderness in one leg, swelling, warmth, redness, enlarged veins", "Swelling in both legs", "Chest pain and sweating", "Fever and rash"], ["AFA", "Medical conditions", "Suspected DVT. What should the passenger NOT do?", "Massage the leg or walk around", "Raise the leg", "Drink water", "Sit still"], ["AFA", "Medical conditions", "Swelling in both legs. Is this likely DVT?", "No", "Yes", "Only in elderly passengers", "Only on long flights"], ["AFA", "Medical conditions", "Before a suspected DVT casualty takes their own medication, who do you consult?", "Ground Medical Support", "The SCCM", "The Captain", "Nobody"], ["AFA", "Medical conditions", "Joint pain, breathing difficulty, double vision after scuba diving. What and what to do?", "Decompression sickness; lay flat or recovery position, keep the joint still", "Asthma; give inhaler", "DVT; elevate the leg", "Stroke; recovery position on weak side"], ["AFA", "Medical conditions", "Fever, and the passenger has their own fever medication. What do you do?", "Advise them to take it and monitor", "Give aspirin", "Stop them taking it", "Put ice on them"], ["AFA", "Medical conditions", "Suspected cold emergency after long exposure. What do you do?", "Remove wet clothes, blanket, warm drinks, warm towel on face", "Rub the skin hard", "Give alcohol", "Hot water bottle on the chest"], ["AFA", "Medical conditions", "In what position do you place a casualty who has fainted?", "Lay them flat (raising legs slightly is not incorrect)", "Sitting upright", "Recovery position on the left", "Standing up"], ["AFA", "Medical conditions", "What is fainting?", "A brief loss of consciousness from reduced blood flow to the brain", "A seizure", "A stroke", "Low oxygen in the cabin"], ["AFA", "Medical conditions", "Which conditions may cause chest pain?", "Angina, heart attack and other serious diseases", "Only indigestion", "Only anxiety", "Only asthma"], ["AFA", "Medical conditions", "Medication for a suspected heart attack?", "Aspirin", "Paracetamol", "Buscopan", "Antacid"], ["AFA", "Medical conditions", "Signs of medical shock?", "Pale, cold, sweaty skin; weakness, dizziness; thirst; fading consciousness", "Flushed hot skin", "Slow breathing and fever", "Rash and itching"], ["AFA", "Medical conditions", "Which condition can follow severe bleeding or severe burns?", "Medical shock", "DVT", "Asthma", "Stroke"], ["AFA", "Medical conditions", "Severe abdominal pain. What should you NOT give?", "Anything to eat or drink", "Reassurance", "Oxygen", "A pillow"], ["AFA", "Medical conditions", "A casualty is vomiting. What can you offer?", "Extra airsickness bags and fluids", "Aspirin", "Food", "Alcohol"], ["AFA", "Medical conditions", "Signs of substance misuse such as alcohol intoxication?", "Confusion or unconsciousness, repeated vomiting, seizures, slow or irregular breathing", "Fever and rash", "Leg swelling", "Facial drooping"], ["AFA", "Medications", "Medication for motion sickness in the FAK?", "Cinnarizine (Stugeron)", "Telfast", "Imodium", "Panadol"], ["AFA", "Medications", "Medication for abdominal pain in the FAK?", "Buscopan/Scopinal (anti-spasmodic), white pouch", "Aspirin", "Antacid", "Telfast"], ["AFA", "Medications", "Medication for heartburn and indigestion?", "Antacid", "Aspirin", "Buscopan", "Imodium"], ["AFA", "Medications", "Medication for a mild headache?", "Paracetamol (Panadol) from Amenities or FAK", "Aspirin from the EMK", "Glyceryl trinitrate", "Nothing"], ["AFA", "Medications", "Where are Panadol and Imodium in the FAK?", "White pouch", "Red pouch", "Yellow module", "Side pocket"], ["AFA", "Medications", "What medication is in the Amenities kit?", "Paracetamol tablets", "Aspirin", "Antacid", "Telfast"], ["AFA", "Medications", "What can be applied to a burn from the FAK?", "Burn dressing (Burn Shield) or burn gel", "Butter or oil", "Ice directly", "Antiseptic cream"], ["AFA", "Trauma", "How do you treat an impaled object or protruding bone?", "Indirect pressure with gauze and rolled bandage, secure, monitor blood loss", "Remove the object", "Press directly on it", "Push the bone back"], ["AFA", "Trauma", "What is the last resort for bleeding management?", "A tourniquet", "Direct pressure", "Elevation", "More dressings"], ["AFA", "Trauma", "A casualty has a nosebleed. What do you advise?", "Pinch the soft part of the nose for 10 minutes", "Tilt the head back", "Blow the nose", "Lie flat"], ["AFA", "Trauma", "How often do you check if a nosebleed has stopped?", "Every 10 minutes", "Every minute", "Every 30 minutes", "Every 5 minutes"], ["AFA", "Trauma", "A nosebleed is still bleeding after 30 minutes. What do you do?", "Call Ground Medical Support", "Keep pinching", "Pack the nose with gauze", "Give aspirin"], ["AFA", "Trauma", "First action when dealing with an amputated body part?", "Control severe bleeding", "Put the part in ice", "Wrap the part", "Call MedLink"], ["AFA", "Trauma", "A heavy object fell on a casualty's head (head, neck or back injury). How do you position them?", "Keep them in the position found", "Recovery position", "Sit them up", "Lay them flat on their front"], ["AFA", "Trauma", "What does RICE stand for?", "Rest, Ice, Compression, Elevate", "Rest, Immobilise, Cool, Examine", "Relax, Ice, Check, Elevate", "Raise, Ice, Cover, Ease"], ["AFA", "Trauma", "Signs of strains and sprains?", "Pain, swelling, discolouration, loss of movement", "Fever and rash", "Bleeding only", "Numbness only"], ["AFA", "Trauma", "How do you dress a sucking chest wound?", "Gauze, cover with plastic, tape on three sides leaving the bottom open", "Seal tightly on all four sides", "Leave it open", "Pack it with gauze"], ["AFA", "Trauma", "Which life-threatening condition can follow a blunt or penetrating abdominal injury?", "Medical shock", "Stroke", "Asthma", "DVT"], ["AFA", "Burns", "A passenger burned their hand on hot coffee. What do you expect to see?", "Red, inflamed, blistered skin", "Black charred skin", "White waxy skin", "No visible change"], ["AFA", "Burns", "A chemical powder burn. What do you do before flushing with water?", "Brush off the dry powder with a gloved hand or dry cloth", "Apply burn gel", "Cover with plastic", "Rub it in water straight away"], ["AFA", "Eyes, ears, teeth", "A casualty has an irritated eye. What first aid?", "Flush with water away from the good eye, cover with sterile pad", "Rub the eye", "Use eye drops from the bar", "Cover both eyes tightly"], ["AFA", "Eyes, ears, teeth", "A foreign object is stuck in the eye. What do you advise?", "Keep both eyes still, don't remove it, stabilise or cover without pressure, call Ground Medical Support", "Remove it with tweezers", "Flush hard with water", "Rub gently"], ["AFA", "Eyes, ears, teeth", "Earache during descent. How can the passenger clear their ears?", "Swallowing, moving the jaw, yawning, Valsalva manoeuvre", "Lie down", "Hold their breath for a minute", "Cover their ears"], ["AFA", "Eyes, ears, teeth", "Toothache with bleeding gums. What can you advise after medication?", "Bite on a dressing to press on the bleeding site", "Rinse with alcohol", "Apply ice to the tooth", "Pull the tooth"], ["AFA", "Kits", "What is the pre-flight check of the EMK?", "Correct stowage and quantity, green seal, contents list, security check of unsealed outer pocket", "Red seal intact", "Open and count all items", "Check the AED battery"], ["AFA", "Kits", "What is the pre-flight check of the FAK?", "1 green and 1 orange seal, or 2 green seals", "2 red seals", "1 red and 1 green seal", "No seal needed"], ["AFA", "Kits", "At DXB one FAK is green-sealed and one red-sealed. What do you do?", "Check the CDL, inform the Captain, contact Engineers to replace the red-sealed FAK", "Depart normally", "Remove the red seal", "Swap it with the EMK"], ["AFA", "Kits", "Both FAKs are red-sealed. Can the aircraft depart to Dubai?", "No. SCCM records in CDL, informs the Captain and contacts NCC", "Yes, if the EMK is green", "Yes, on short flights", "Yes, with Captain approval only"], ["AFA", "Kits", "Only the blood pressure kit in the EMK outer pocket was used. What do you do?", "Nothing, the EMK stays serviceable", "Red-seal the EMK", "Replace the EMK", "Write a CSR"], ["AFA", "Kits", "Where is the Controlled Drug Medication form?", "EMK side pocket", "FAK white pouch", "Flight deck", "CCQRH"], ["AFA", "Kits", "Where are the emergency childbirth items in the EMK?", "Yellow module", "Red module 2", "White pouch", "Side pocket"], ["AFA", "Kits", "What is the UPK used for?", "Managing suspected communicable disease (and body fluids)", "Restraining passengers", "Childbirth", "CPR"], ["AFA", "Kits", "If UPK contents are used, what colour seal at top of descent?", "Red", "Green", "Orange", "No seal"], ["AFA", "Kits", "Where do used needles and syringes go?", "A sharps container", "A biohazard bag", "The galley waste bin", "A sick bag"], ["AFA", "Kits", "Where do contaminated (soiled) materials go?", "A biohazard bag", "The lavatory bin", "The galley waste cart", "A sick bag"], ["AFA", "Kits", "What do you do with used bandages, aprons and pocket masks after first aid?", "Biohazard bag, handed to the cleaning supervisor in Dubai", "Throw in the galley waste", "Give to the passenger", "Keep in the FAK"], ["AFA", "Childbirth & pregnancy", "What is the second stage of childbirth?", "Delivery of the baby", "Contractions", "Delivery of the placenta", "Breaking of the waters"], ["AFA", "Childbirth & pregnancy", "What can crew encourage the mother to do during childbirth?", "Push during contractions and rest in between", "Push constantly", "Hold her breath", "Lie on her front"], ["AFA", "Childbirth & pregnancy", "What do you do with the placenta after delivery?", "Put it in a biohazard bag for a doctor's inspection", "Throw it away", "Leave it attached", "Put it in the sharps box"], ["AFA", "Childbirth & pregnancy", "Under 20 weeks pregnant with severe abdominal pain and bleeding. What do you suspect?", "Miscarriage", "Labour", "Indigestion", "DVT"], ["AFA", "Childbirth & pregnancy", "When does a single uncomplicated pregnancy need a medical certificate?", "Week 29 to end of week 36", "Week 20 to 28", "From week 37", "Always"], ["AFA", "Childbirth & pregnancy", "From when can a single uncomplicated pregnancy NOT travel?", "From week 37", "From week 32", "From week 28", "From week 40"], ["AFA", "General", "How do you lift a heavy object safely?", "Bend at the knees, hands near waist level, back straight but not rigid", "Bend at the waist with straight legs", "Twist while lifting", "Lift with one arm"], ["AFA", "General", "What are causes of fainting?", "Low blood sugar, blood pressure problems, dehydration, anxiety, standing up quickly", "Only heat", "Only alcohol", "Only heart attack"], ["AFA", "General", "Is it negligent to act outside your first aid training if it harms the casualty?", "Yes, the airline has no obligation to support it", "No, any help is fine", "Only if the Captain objects", "Only on the ground"], ["AFA", "Medications", "Which medicine is used for diarrhoea, and where is it?", "Loperamide (Imodium), FAK white pouch", "Buscopan, EMK Red Module 2", "Telfast, Amenities kit", "Stugeron, UPK"], ["AFA", "Medications", "Where can crew find tablets for mild allergies?", "FAK and EMK", "Amenities kit only", "UPK", "AED pouch"], ["AFA", "Medications", "Which is the only injection cabin crew may give?", "EpiPen", "Insulin", "Glyceryl trinitrate", "Salbutamol"], ["AFA", "Medications", "How long do you hold the EpiPen in place after injecting?", "10 seconds", "3 seconds", "30 seconds", "1 minute"], ["SEP", "Equipment locations", "What is found under every cabin jump seat (L1, L2, R2) on the B737-8?", "2 CLJ, 2 TOR, 2 PBE", "1 FE, 1 FAK", "2 PO2, 4 PO2M", "1 MEG, 2 DEM", "Left seats (L1, L2) also have 1 PG."], ["SEP", "Equipment locations", "How many fire extinguishers are on a B737-8?", "7", "5", "6", "8", "3 in L1 stowage, 1 above L2, 2 above R2, 1 flight deck."], ["SEP", "Equipment locations", "Where are the two FAKs on a B737-8?", "L1 stowage and above the L2 seat", "L1 and R1 stowage", "Centre overhead stowage", "Above L2 and R2 seats"], ["SEP", "Equipment locations", "Where is the EMK on a B737-8?", "Centre overhead stowage", "L1 stowage", "Above the L2 seat", "Row 32 ABC overhead"], ["SEP", "Equipment locations", "Where are the infant seat belts and infant life jackets?", "Row 32 ABC overhead locker", "Centre overhead stowage", "L1 stowage", "Above the R2 seat"], ["SEP", "Equipment locations", "How many restraint kits are there and where?", "2, in L1 stowage", "1, in L1 stowage", "2, above R2", "2, in the flight deck"], ["SEP", "Equipment locations", "What is above the R2 seat on a B737-8?", "2 FE, 2 PO2, 4 PO2M", "1 FAK, 1 FE", "1 MEG, 2 DEM", "2 PBE"], ["SEP", "Equipment locations", "What is above the L2 seat on a B737-8?", "1 FAK, 1 FE", "2 PBE", "2 FE, 2 PO2, 4 PO2M", "1 EMK"], ["SEP", "Equipment locations", "What is in the centre overhead stowage?", "1 EMK, 5 ILC, 6 SLJ (plus 4 rafts on ETOPS)", "30 ISB, 20 ILJ", "2 PO2, 4 PO2M", "1 MEG, 2 DEM"], ["SEP", "Equipment locations", "How many protective gloves (PG) and where?", "3: under L1 seat, under L2 seat, flight deck", "2: L1 and R2", "4: one at each door", "3: all in L1 stowage"], ["SEP", "Equipment locations", "Where is the AED (defibrillator)?", "L1 stowage", "Centre overhead stowage", "Above L2 seat", "Flight deck"], ["SEP", "Equipment locations", "Where is the onboard wheelchair?", "Over-wing exit ABC, 3rd overhead locker", "L1 stowage", "Row 32 DEF", "Aft closet"], ["SEP", "Equipment locations", "How many torches are on a B737-8?", "8", "6", "4", "9"], ["SEP", "Equipment locations", "Where are the 3 sets of portable oxygen (2 PO2 + 4 masks each)?", "L1 stowage, above R2, row 31 ABC overhead", "L1, L2 and R2 stowages", "Centre overhead stowage only", "Under each jump seat"], ["SEP", "Equipment locations", "What is in the row 32 DEF overhead locker?", "1 megaphone and 2 demo kits", "30 ISB and 20 ILJ", "2 FE", "1 EMK"]];
+
+const NOTES = { SEP: {
+"Equipment layout (B737-8)": `
+<ul>
+<li><b>Every cabin jump seat = 2-2-2:</b> 2 CLJ, 2 TOR, 2 PBE under L1, L2 and R2. Left seats (L1, L2) also have 1 PG.</li>
+<li><b>Oxygen = 2 bottles + 4 masks, ×3:</b> L1 stowage, above R2, row 31 ABC → 6 PO2, 12 masks.</li>
+<li><b>Fire extinguishers 3-1-2-1:</b> L1 stowage 3, above L2 1, above R2 2, flight deck 1 → 7 FE.</li>
+<li><b>FAK twins on the left:</b> L1 stowage and above L2 → 2 FAK.</li>
+<li><b>Megaphone & demo kit:</b> L1 has 1 MEG + 1 DEM; row 32 DEF has 1 MEG + 2 DEM → 2 MEG, 3 DEM.</li>
+<li><b>L1 stowage (SCCM):</b> 1 FAK, 1 DEF (AED), 2 UPK · 1 MEG, 1 DEM, 1 ELT (2 ETOPS) · 2 PO2, 4 PO2M · 3 FE · 2 RES, 4 JESB.</li>
+<li><b>Centre overhead (CCM3) "1-5-6":</b> 1 EMK, 5 ILC, 6 SLJ (+4 rafts ETOPS).</li>
+<li><b>Row 32 ABC "baby locker":</b> 30 ISB, 20 ILJ.</li>
+<li><b>Above L2:</b> 1 FAK, 1 FE. <b>Above R2:</b> 2 FE, 2 PO2, 4 PO2M.</li>
+<li><b>Wheelchair:</b> over-wing exit ABC, 3rd overhead locker. <b>Flight deck:</b> 3 quick donning masks, axe, 1 FE, 1 PG.</li>
+<li><b>Who checks:</b> SCCM = L1; CCM3 = centre overhead and OWE ABC; CCM2 = everything at the back (L2, R2, rows 31/32); CCM4 = OWE DEF.</li>
+</ul>
+<div class="tbl"><table>
+<tr><th>Item</th><th>Qty</th><th>Item</th><th>Qty</th></tr>
+<tr><td>FE</td><td>7</td><td>PO2 / masks</td><td>6 / 12</td></tr>
+<tr><td>PBE</td><td>6 or 7</td><td>Torch</td><td>8</td></tr>
+<tr><td>CLJ</td><td>9</td><td>PG</td><td>3</td></tr>
+<tr><td>FAK / EMK / UPK</td><td>2 / 1 / 2</td><td>AED</td><td>1</td></tr>
+<tr><td>MEG / DEM</td><td>2 / 3</td><td>RES</td><td>2</td></tr>
+<tr><td>ILC / SLJ</td><td>5 / 6</td><td>ILJ / ISB</td><td>20 / 30</td></tr>
+</table></div>`,
+"Durations & pre-flight checks": `
+<div class="tbl"><table>
+<tr><th>Item</th><th>Duration / number</th><th>Pre-flight check (plus stowage & quantity)</th></tr>
+<tr><td>PBE</td><td>About 15 min</td><td>Humidity indicator blue or white (pink = U/S)</td></tr>
+<tr><td>POCA</td><td>HI 4 L/min = 60 min · LO 2 L/min = 120 min</td><td>Above 1500 psi, window red, 2 masks</td></tr>
+<tr><td>Drop-down O2</td><td>12–22 min; deploys at 14,000 ft</td><td>–</td></tr>
+<tr><td>Fire extinguisher</td><td>About 10 s; use 4–6 ft away</td><td>Gauge green, ring pin through handle and lever, seal intact</td></tr>
+<tr><td>Torch</td><td>30 min – 4 hrs</td><td>LED blinks every 3–10 s (see 2 blinks)</td></tr>
+<tr><td>Megaphone</td><td>–</td><td>Squeeze handle, hear amplified click</td></tr>
+<tr><td>Emergency lights</td><td>About 10 min</td><td>Switches: flight deck and AAP</td></tr>
+<tr><td>Slide / raft / life jacket</td><td>6 s / 10 s / 2 s inflation</td><td>Raft 56 normal, 84 overload</td></tr>
+<tr><td>Over-wing exit</td><td>–</td><td>Clear cover over handle fitted correctly</td></tr>
+<tr><td>Safety cards</td><td>–</td><td>One per seat pocket, right aircraft, good condition</td></tr>
+<tr><td>AED</td><td>–</td><td>Blinking green ready light, Fast Response Kit sealed</td></tr>
+<tr><td>FAK</td><td>–</td><td>2 green, or 1 green + 1 orange seal</td></tr>
+</table></div>
+<ul><li>Portable oxygen is <b>never</b> used for fire fighting. Drop-down masks are never re-stowed by crew.</li>
+<li>Lavatory/crew station mask door stuck: flat tool (safety card, CCQRH back). PSU door: hairpin or thin rod.</li></ul>`,
+"Crew rules & normal ops": `
+<ul>
+<li><b>Fitness:</b> local anaesthetic 12 h · general anaesthetic 48 h · blood donation 24 h · diving 24 h · alcohol 12 h before report · pregnant max 16 weeks · spare spectacles if on licence.</li>
+<li><b>Crew:</b> minimum 4. Reduced crew to DXB only with NCDM approval, max 50 pax per crew.</li>
+<li><b>Chain of command:</b> Commander → other Captain → FO → SCCM → CCM2–6.</li>
+<li><b>Report:</b> 60 min before departure. SCCM checks CCQRH with valid revision record page.</li>
+<li><b>Doors:</b> SCCM R1, CCM3 L1, CCM2 L2, CCM4 R2. Each crew checks own jump seat; CCM2/CCM4 check L2/R2 pairs if CCM5/6 not carried.</li>
+<li><b>Areas:</b> CCM3 rows 6–18 + OWE + centre overhead; CCM4 rows 19–32.</li>
+<li><b>After boarding:</b> SCCM gives Commander TOB + number/location of PRMs. \"All ground staff…\" PA after leaving flight deck, before closing L1.</li>
+<li><b>Safety demo:</b> right after \"all doors armed and cross-checked\". Repeat if back on stand, diversion, or delayed over 1 hour.</li>
+<li><b>Cabin secure for take-off:</b> passed once moving forward under own power. 15 points of cabin secure.</li>
+<li><b>Sterile flight deck:</b> landing = seatbelt sign at 10,000 ft until engine shutdown.</li>
+<li><b>No contact:</b> take-off (\"prepare for departure\") and landing (\"take your seats\", gear down until off the runway).</li>
+<li><b>Intervals:</b> cabin presence every 10 min · toilets every 20 min · flight deck contact about every 20 min.</li>
+<li><b>Refuelling:</b> doors disarmed, belts unfastened, no T-PEDs, blinds open; CCM3 L1, CCM2 L2, CCM4 row 15, SCCM row 2.</li>
+<li><b>Interphone emergency call:</b> press 2 three times.</li>
+</ul>`,
+"Passengers": `
+<ul>
+<li><b>Travel alone:</b> 12+. Accompany a child under 12: 16+. An 11-year-old alone is offloaded.</li>
+<li><b>Infants:</b> from 7 days to under 2 years. Max 20 per flight. Max 2 per adult if one is in a car seat.</li>
+<li><b>Car seats:</b> forward-facing 7 days–3 yrs; rearward-facing 7 days–6 months (window seat only).</li>
+<li><b>ILC:</b> 0–18 months. <b>ILJ:</b> up to 15 kg, given before take-off.</li>
+<li><b>Exit rows:</b> 16+, able and willing; HIPPEDA can't sit there. Pregnant only if no extension belt needed.</li>
+<li><b>PRMs:</b> not more than the able-bodied people who can help; evacuated last.</li>
+<li><b>Animals in cabin:</b> falcons and assistance dogs only.</li>
+<li><b>CBBG:</b> paid extra seat for a bag; not in rows 14 or 17.</li>
+</ul>`,
+"Turbulence & decompression": `
+<ul>
+<li><b>Turbulence briefing from flight crew:</b> time to secure, level, duration. Levels: light, moderate, severe.</li>
+<li><b>Light:</b> food and cold drinks OK, no hot drinks. <b>Moderate/severe:</b> no service.</li>
+<li><b>Rapid decompression:</b> nearest mask, sit, fasten seatbelt. Masks drop above 14,000 ft with an auto announcement.</li>
+<li><b>Slow decompression:</b> ears popping, getting tired without realising.</li>
+<li><b>Emergency descent PA:</b> \"This is the Captain. Emergency descent\" ×2.</li>
+<li><b>Safe to move:</b> \"Senior to the flight deck\", \"Senior to the interphone\" or 3 high-low chimes.</li>
+<li><b>Flight deck door:</b> panels hinge into the flight deck.</li>
+</ul>`,
+"Fire & smoke": `
+<ul>
+<li><b>Fire triangle:</b> fuel, heat, oxygen. Extinguish by starving, cooling, smothering.</li>
+<li><b>Classes:</b> A solids · B liquids · C gases · D metals (lithium) · E electrical · F cooking.</li>
+<li><b>Roles:</b> Fire Fighter (find source, electrics off, fight) · Communicator (get Coordinator, tell Commander) · Coordinator (equipment, crowd) · 4th crew (crowd control, review drill after).</li>
+<li><b>Oven:</b> keep closed, pull CB. No flames → check contents, monitor, don't use again.</li>
+<li><b>Overhead stowage:</b> open 2.5 cm, PG/PBE, discharge, close, wait 30 s, then remove and dampen.</li>
+<li><b>Lav door hot:</b> open 2.5–5 cm, discharge 1 FE, close 30 s.</li>
+<li><b>Laptop after FE:</b> pour water/non-flammable liquid. <b>Electrical fire out:</b> no water.</li>
+<li><b>IFE flames:</b> FE, power off, find source, don't use, monitor.</li>
+<li><b>Smoke report:</b> source, colour, quantity, passenger reaction.</li>
+<li><b>Lav detector U/S:</b> lav locked, checked every 20 min. Smoke detector alarm = horn + red light.</li>
+<li><b>After FE use:</b> back to stowage, CDL, CSR.</li>
+</ul>`,
+"Commands & emergency calls": `
+<ul>
+<li><b>Alert calls:</b> \"Senior to the flight deck\", \"Senior to the interphone\", 3 high-low chimes → report to L1.</li>
+<li><b>NITS:</b> Nature, Intentions, Time, Supplementary info. SCCM repeats it back.</li>
+<li><b>CLEAR:</b> Crew name, Location, Event, Actions, Recommendations.</li>
+<li><b>Taxi / rejected take-off:</b> \"Attention crew at stations\" ×2 → go to door, check armed, assess, wait.</li>
+<li><b>No evacuation:</b> \"Normal operations\" ×2.</li>
+<li><b>Go-around:</b> stay seated, observe, go-around PA.</li>
+<li><b>Planned emergency:</b> \"Cabin crew take your seats\" → lights to match outside, review after-touchdown drill.</li>
+<li><b>500 ft:</b> \"This is the Captain, brace brace\" ×2 → shout \"Heads down, heads down, brace, brace\".</li>
+<li><b>Landing imminent, cabin not secure:</b> \"Cabin crew take your seats immediately\".</li>
+<li><b>Pilot incapacitation:</b> never remove from seat; inertia reel lock; read the left (challenge) side.</li>
+</ul>`,
+"Evacuation & ditching": `
+<ul>
+<li><b>SUDDS:</b> Self-sustaining fire, Unusual attitude, Dense smoke, Ditching, Sounds of break-up → crew may evacuate.</li>
+<li><b>SBELA:</b> Seatbelts, Brace (when, how, how long), Exits, Lifejackets, ABPs. Time left → repeat.</li>
+<li><b>ABPs:</b> at least 2 per exit; CCM2 briefs 4 for L2/R2; CCM3 briefs OWE 15/16 ABC. SCCM reads the emergency PA.</li>
+<li><b>Brace</b> until the aircraft comes to a complete stop.</li>
+<li><b>Precautionary rapid disembarkation:</b> stairs/jet bridge, not slides. Precautionary landing: stay seated, wait for Commander.</li>
+<li><b>Short notice:</b> up to 5 min. Land evacuation: upwind, away from aircraft. Blocked: \"Exit blocked, go that way\".</li>
+<li><b>OWE direction:</b> land → toward the tail; ditching → forward edge of the wing.</li>
+<li><b>Planned ditching exits:</b> CCM3 L1, SCCM R1, CCM2 left OWE, CCM4 right OWE. ETOPS rafts from L1, R1, OWE 15/16.</li>
+<li><b>Disarm L1/R1:</b> planned ditching ETOPS → after NITS; unplanned with rafts → when stopped on water. No rafts → open ARMED.</li>
+<li><b>Crew life jackets (unplanned):</b> right after releasing harness and standing up.</li>
+<li><b>Survival:</b> jungle → fire; night SOS → torch; water → hypothermia; polar → frostbite; heat → protect head and eyes; sea dye lasts 3 h; \"X\" = need medical help.</li>
+</ul>`
+}, AFA: {
+"Assessment & roles": `
+<ul>
+<li><b>4 roles:</b> First Responder (first on scene, takes initial lead, assigns tasks), Back-up (gathers and uses equipment), Communicator (communication and extra support), Lead (normally the SCCM).</li>
+<li><b>Primary assessment:</b> scene safety and PPE → check response → airway → breathing (up to 10 seconds) → circulation → call for help.</li>
+<li><b>AVPU:</b> Alert, Voice, Pain, Unresponsive.</li>
+<li><b>SAMPLE:</b> Signs/symptoms, Allergies, Medications, Past history, Last meal, Events.</li>
+<li><b>DOTS:</b> Deformities, Open wounds, Tenderness, Swelling.</li>
+<li><b>Vital signs:</b> every 5 minutes (consciousness, breathing, pulse, temperature, pain 1–10).</li>
+<li><b>Recovery position:</b> check breathing every minute for 10 seconds. Stroke casualty goes onto the weak side.</li>
+<li><b>Capillary refill:</b> press nailbed until white; colour back in under 2 seconds.</li>
+<li><b>Unfit to fly at boarding:</b> inform SCCM and Commander, MedLink screening; if unfit, offload and SCCM writes a CSR.</li>
+<li><b>Negligence:</b> acting outside your training and causing harm. The airline has no obligation to support it.</li>
+</ul>`,
+"Vital signs": `
+<div class="tbl"><table>
+<tr><th></th><th>Breathing / min</th><th>Pulse / min</th></tr>
+<tr><td>Adult (8 yrs+)</td><td>10–20</td><td>60–80</td></tr>
+<tr><td>Child (1–7 yrs)</td><td>20–30</td><td>80–100</td></tr>
+<tr><td>Infant</td><td>30–50</td><td>100–120</td></tr>
+</table></div>
+<ul>
+<li><b>Normal temperature:</b> 36.5–37.5°C. <b>Fever:</b> above 37.5°C (99.5°F). Hypothermia below 35°C.</li>
+<li><b>Infant pulse:</b> brachial, inside the upper arm, two fingers.</li>
+</ul>`,
+"CPR & AED": `
+<ul>
+<li><b>Unresponsive and not breathing:</b> start chest compressions.</li>
+<li><b>Ratio:</b> 30:2 for all ages. <b>Rate:</b> 100–120 per minute.</li>
+<li><b>Depth:</b> adult 5–6 cm (2 hands centre of chest); child about 5 cm; infant about 4 cm (2-thumb encircling or heel of one hand).</li>
+<li><b>Rescue breath:</b> about 1 second, until the chest rises. Adult/child airway: head tilt, chin lift. Infant: neutral chin lift.</li>
+<li><b>Max hands-off time:</b> 10 seconds. No pocket mask → keep doing compressions. No space in the aisle → work from the head end.</li>
+<li><b>STOP:</b> Spontaneous breathing, Turned over to emergency services, Operator in danger, Physician advises. After 30 min of CPR with no signs of life and \"no shock advised\" the person may be presumed dead.</li>
+<li><b>AED:</b> reanalyses every 2 minutes, keep doing CPR in between. Analysing → shout \"Stop CPR, stand clear\". Shock advised → \"I'm clear, you're clear, we're all clear!\" then press the orange button.</li>
+<li><b>Child (1–8):</b> insert the child key. Infant pads: one front, one back.</li>
+<li><b>AED pre-flight:</b> correct stowage and quantity, blinking green ready light, Fast Response Kit sealed (scissors, gloves, razor, pocket mask, towel).</li>
+<li><b>Landing during CPR:</b> no more than 1 crew continues.</li>
+</ul>`,
+"Choking": `
+<ul>
+<li><b>Can cough or talk:</b> encourage coughing and monitor.</li>
+<li><b>Complete blockage signs:</b> can't cough, talk or breathe; grasping throat; blue lips.</li>
+<li><b>Adult or child:</b> cycles of 5 back blows then 5 abdominal thrusts. <b>Pregnant:</b> chest thrusts instead.</li>
+<li><b>Infant:</b> sit down, face down along forearm, up to 5 back blows, turn over, up to 5 chest thrusts with 2 fingers, repeat. Never blind finger sweep.</li>
+<li><b>Becomes unconscious:</b> lay flat, call for help and the AED, start CPR, look in the mouth after each set of compressions.</li>
+</ul>`,
+"Medicines & locations": `
+<div class="tbl"><table>
+<tr><th>Medicine</th><th>Used for</th><th>Location</th></tr>
+<tr><td>Paracetamol (Panadol)</td><td>Mild headache, pain</td><td>FAK white pouch and Amenities kit</td></tr>
+<tr><td>Loperamide (Imodium)</td><td>Diarrhoea</td><td>FAK white pouch</td></tr>
+<tr><td>Fexofenadine (Telfast)</td><td>Mild allergy</td><td>FAK white pouch (also EMK)</td></tr>
+<tr><td>Buscopan / Scopinal</td><td>Abdominal pain (anti-spasmodic)</td><td>FAK white pouch</td></tr>
+<tr><td>Cinnarizine (Stugeron)</td><td>Motion sickness</td><td>FAK</td></tr>
+<tr><td>Antacid</td><td>Heartburn, indigestion</td><td>FAK</td></tr>
+<tr><td>Aspirin</td><td>Suspected heart attack</td><td>FAK (white pouch per colleagues' notes)</td></tr>
+<tr><td>Salbutamol (Ventolin)</td><td>Asthma</td><td>EMK Red Module 2 (asthma pack)</td></tr>
+<tr><td>EpiPen</td><td>Severe allergy (anaphylaxis)</td><td>EMK Red Module 2</td></tr>
+<tr><td>Glucose gel</td><td>Low blood sugar</td><td>EMK</td></tr>
+<tr><td>Glyceryl trinitrate (GTN)</td><td>Chest pain</td><td>EMK Red Module 2 (colleagues' notes only)</td></tr>
+<tr><td>Burn Shield / burn gel</td><td>Burns</td><td>FAK</td></tr>
+</table></div>
+<ul>
+<li><b>EpiPen</b> is the only injection crew can give. Hold for 10 seconds. Passenger's own EpiPen first; if none and no Ground Medical Support, give the onboard one, PA for a medical volunteer and keep trying GMS.</li>
+<li><b>Salbutamol</b> is single use: put it back in the EMK and red-seal the EMK.</li>
+<li><b>Own medication:</b> fever → advise them to take it and monitor. Suspected DVT → consult Ground Medical Support first.</li>
+</ul>`,
+"Kits & seals": `
+<ul>
+<li><b>FAK pre-flight:</b> 2 green seals, or 1 green and 1 orange. CCM2 states the aft FAK seal colour to the SCCM.</li>
+<li><b>At DXB, one FAK red-sealed:</b> check CDL, inform Captain, Engineers replace it. <b>Both FAKs red:</b> cannot depart to Dubai; SCCM records in CDL, informs Captain, contacts NCC.</li>
+<li><b>EMK pre-flight:</b> correct stowage and quantity, green seal, contents list, check the unsealed outer pocket.</li>
+<li><b>Only the EMK blood pressure kit used:</b> nothing to do, still serviceable.</li>
+<li><b>Controlled Drug Medication form:</b> EMK side pocket. <b>Childbirth items:</b> EMK yellow module.</li>
+<li><b>UPK:</b> for suspected communicable disease and body fluids. Used → red seal at top of descent.</li>
+<li><b>Sharps:</b> sharps container (water bottle if none). <b>Soiled items:</b> biohazard bag, handed to the cleaning supervisor in Dubai.</li>
+<li><b>Kit locations (B737-8):</b> FAK in L1 stowage and above L2 seat; EMK in centre overhead stowage; 2 UPK and the AED in L1 stowage.</li>
+</ul>`,
+"Medical conditions": `
+<ul>
+<li><b>Stroke (FAST):</b> Facial drooping, Arm weakness, Speech difficulty, Time. Recovery position onto the weak side.</li>
+<li><b>Seizure:</b> note time, cushion the head, move objects away; don't restrain, nothing in the mouth. Child/infant: check temperature. Afterwards: tiredness.</li>
+<li><b>Low blood sugar:</b> hunger, confused (drunk-like), pale sweaty, weak, tremors → sweet drink then food; EMK glucose gel.</li>
+<li><b>Asthma:</b> hard to breathe out, dry cough, wheeze, blue lips → own inhaler, then oxygen.</li>
+<li><b>Anaphylaxis:</b> swollen lips, rash, wheeze → EpiPen.</li>
+<li><b>Hyperventilation:</b> main sign of panic. Not improving with coaching → suspect hypoxia. Prolonged hyperventilation = sign of hypoxia.</li>
+<li><b>Hypoxia:</b> lack of oxygen in the cells and tissues → portable oxygen on high flow. Ask MedLink if you can reduce from 4 to 2 L/min.</li>
+<li><b>Chest pain:</b> angina, heart attack, other serious disease. Heart attack if pain lasts over 20 min → aspirin. Becomes unresponsive → \"I need help, get the defib\".</li>
+<li><b>DVT:</b> pain, swelling, warmth, redness in ONE leg. Don't massage or walk. Both legs swollen ≠ DVT.</li>
+<li><b>Decompression sickness:</b> joint pain, breathing difficulty, double vision after diving → lay flat or recovery position, keep the joint still.</li>
+<li><b>Shock:</b> pale, cold, sweaty, weak, dizzy, thirsty. Follows severe bleeding, burns, abdominal injury.</li>
+<li><b>Fainting:</b> lay flat (raising legs slightly is not incorrect).</li>
+<li><b>Fever:</b> above 37.5°C; remove excess clothing, open air vents, damp towel.</li>
+<li><b>Cold emergency:</b> remove wet clothes, blanket, warm drinks, warm towel.</li>
+<li><b>Severe abdominal pain:</b> nothing to eat or drink. <b>Vomiting:</b> extra sick bags and fluids.</li>
+</ul>`,
+"Trauma & burns": `
+<ul>
+<li><b>Severe bleeding:</b> direct pressure; add dressings, never remove them. Tourniquet is the last resort.</li>
+<li><b>Impaled object / protruding bone:</b> don't remove; indirect pressure, padding, secure.</li>
+<li><b>Nosebleed:</b> pinch soft part 10 min, check every 10 min; still bleeding after 30 min → Ground Medical Support.</li>
+<li><b>Amputation:</b> control bleeding first; part wrapped, sealed bag, on ice, note the time.</li>
+<li><b>Head, neck or back injury:</b> keep them in the position found (spinal motion restriction).</li>
+<li><b>Sprain:</b> pain, swelling, discolouration, loss of movement → RICE (Rest, Ice max 10 min, Compression, Elevate).</li>
+<li><b>Sucking chest wound:</b> gauze, plastic over it, tape three sides.</li>
+<li><b>Burns:</b> hot coffee = red, inflamed, blistered. Burn Shield or burn gel. Chemical powder: brush off first, then flush.</li>
+<li><b>Eye:</b> irritated → flush away from good eye, sterile pad. Object stuck → don't remove, cover without pressure, GMS.</li>
+<li><b>Ear pain:</b> swallow, yawn, move jaw, Valsalva. <b>Toothache bleeding:</b> bite on a dressing.</li>
+</ul>`,
+"Childbirth & pregnancy": `
+<ul>
+<li><b>Stages:</b> 1 contractions, 2 delivery of the baby, 3 delivery of the placenta.</li>
+<li><b>Advice:</b> push during contractions, rest in between.</li>
+<li><b>Placenta:</b> biohazard bag for a doctor to inspect.</li>
+<li><b>Umbilical cord:</b> clamps at 15 cm and 23 cm from the baby, cut when it turns white.</li>
+<li><b>Miscarriage:</b> before 20 weeks (severe abdominal pain and bleeding). Stillbirth: 20 weeks or later.</li>
+<li><b>Travel (single pregnancy):</b> medical certificate weeks 29–36; not allowed from week 37.</li>
+</ul>`,
+"Disease & hygiene": `
+<ul>
+<li><b>Suspected communicable disease:</b> ask countries visited in the last 21 days and close contact; one lavatory for them; isolate if possible; use the UPK.</li>
+<li><b>Hand washing:</b> 20 seconds. Most important prevention for blood-borne disease.</li>
+<li><b>Zoonoses:</b> diseases passed from animals to humans.</li>
+<li><b>Lifting:</b> bend the knees, back straight but not rigid, load near waist level.</li>
+</ul>`
+} };
+
+/* ---------- Helpers ---------- */
+const $=id=>document.getElementById(id);
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+const COL={SEP:"var(--sep)",AFA:"var(--afa)"};
+let subj="ALL", topic="ALL", count=25;
+
+function chips(el,items,cur,set,cls){
+  el.innerHTML="";
+  items.forEach(([v,l])=>{const b=document.createElement("button");b.className="chip "+((cls&&cls[v])||"");b.textContent=l;b.setAttribute("aria-pressed",v===cur);
+    b.onclick=()=>{set(v);el.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b));};el.appendChild(b);});
+}
+const inSubj=q=>subj==="ALL"||q[0]===subj;
+function topicChips(){
+  const pool=BANK.filter(inSubj); const tops=[...new Set(pool.map(q=>q[1]))];
+  topic="ALL";
+  chips($("topicChips"),[["ALL",`All topics (${pool.length})`],...tops.map(t=>[t,`${t} (${pool.filter(q=>q[1]===t).length})`])],topic,v=>topic=v);
+}
+const nS=BANK.filter(q=>q[0]==="SEP").length, nA=BANK.filter(q=>q[0]==="AFA").length;
+chips($("subjChips"),[["ALL",`Both (${nS+nA})`],["SEP",`SEP (${nS})`],["AFA",`AFA (${nA})`]],subj,v=>{subj=v;topicChips();},{SEP:"sep",AFA:"afa"});
+topicChips();
+chips($("countChips"),[[10,"10"],[25,"25"],[50,"50"],[0,"All"]],count,v=>count=v);
+
+/* ---------- Tabs ---------- */
+let quizView="setup";
+function view(id){["setup","quiz","results","revise"].forEach(s=>$(s).hidden=s!==id);window.scrollTo(0,0);}
+$("tabQuiz").onclick=()=>{$("tabQuiz").setAttribute("aria-selected","true");$("tabRev").setAttribute("aria-selected","false");view(quizView);};
+$("tabRev").onclick=()=>{$("tabRev").setAttribute("aria-selected","true");$("tabQuiz").setAttribute("aria-selected","false");view("revise");};
+
+/* ---------- Quiz: wrong answers repeat until correct ---------- */
+let queue=[], pos=0, uniq=0, firstRight=0, cleared=0, attempts=0, mistakes=new Map(), answered=false, cur=null, bySubj={};
+
+function startQuiz(pool){
+  let items=shuffle(pool.slice()); if(count&&!pool.isRetry) items=items.slice(0,count);
+  queue=items.map(q=>({q,rep:false})); pos=0; uniq=items.length; firstRight=0; cleared=0; attempts=0; mistakes=new Map();
+  bySubj={SEP:[0,0],AFA:[0,0]}; items.forEach(q=>bySubj[q[0]][1]++);
+  quizView="quiz"; view("quiz"); render();
+}
+$("startBtn").onclick=()=>startQuiz(BANK.filter(q=>inSubj(q)&&(topic==="ALL"||q[1]===topic)));
+
+function render(){
+  answered=false; cur=queue[pos];
+  const [s,t,text,ans,...rest]=cur.q, wrongs=rest.slice(0,3);
+  $("strip").style.setProperty("--c",COL[s]);
+  $("qTopic").textContent=`${s} · ${t}`; $("qBadge").hidden=!cur.rep;
+  $("qText").textContent=text;
+  const left=queue.length-pos-1;
+  $("qCount").textContent=`Cleared ${cleared} of ${uniq}`+(left>0?` · ${left} left in queue`:"");
+  $("qScore").textContent=attempts?`First-try correct: ${firstRight}`:"";
+  $("prog").style.width=`${cleared/uniq*100}%`;
+  $("fb").hidden=true; $("nextBtn").hidden=true;
+  const box=$("opts"); box.innerHTML="";
+  shuffle([ans,...wrongs]).forEach((o,i)=>{
+    const b=document.createElement("button"); b.className="opt"; b.dataset.ok=o===ans?"1":"";
+    b.innerHTML=`<span class="k">${i+1}</span><span></span>`; b.lastChild.textContent=o;
+    b.onclick=()=>choose(b,o===ans); box.appendChild(b);
+  });
+}
+function choose(btn,ok){
+  if(answered) return; answered=true; attempts++;
+  const q=cur.q, note=q[7];
+  document.querySelectorAll(".opt").forEach(b=>{b.disabled=true;if(b.dataset.ok)b.classList.add("right");});
+  const fb=$("fb"); fb.hidden=false; fb.className="feedback "+(ok?"ok":"no");
+  if(ok){
+    cleared++; if(!cur.rep){firstRight++;bySubj[q[0]][0]++;}
+    fb.innerHTML="<b>Correct</b>"+(cur.rep?"Cleared from your repeat list.":"");
+  } else {
+    btn.classList.add("wrong");
+    const m=mistakes.get(q[2])||{q,times:0}; m.times++; mistakes.set(q[2],m);
+    const gap=Math.min(3+Math.floor(Math.random()*3), queue.length-pos-1);
+    queue.splice(pos+1+gap,0,{q,rep:true});
+    fb.innerHTML="<b>Not quite</b>This question will come back later in the round.";
+  }
+  const t=document.createElement("div"); t.style.marginTop="4px";
+  t.textContent=(ok?"":"Correct answer: "+q[3])+(note?(ok?"":" — ")+note:""); if(t.textContent) fb.appendChild(t);
+  $("nextBtn").hidden=false; $("nextBtn").textContent=pos===queue.length-1?"See results":"Next question"; $("nextBtn").focus();
+}
+$("nextBtn").onclick=()=>{ if(pos<queue.length-1){pos++;render();} else finish(); };
+$("quitBtn").onclick=()=>finish(true);
+
+function finish(early){
+  quizView="results"; view("results");
+  const pct=uniq?Math.round(firstRight/uniq*100):0;
+  $("rScore").textContent=`${pct}%`;
+  const parts=[`First-try correct: ${firstRight} of ${uniq}`];
+  ["SEP","AFA"].forEach(s=>{if(bySubj[s][1]) parts.push(`${s}: ${bySubj[s][0]}/${bySubj[s][1]}`);});
+  parts.push(`Questions missed: ${mistakes.size}`); if(early) parts.push("Ended early");
+  $("rSplit").innerHTML=parts.map(p=>`<span>${p}</span>`).join("");
+  const list=$("missList"); list.innerHTML=""; $("retryBtn").hidden=!mistakes.size;
+  if(!mistakes.size){list.innerHTML="<p>No mistakes this round. Well done.</p>";return;}
+  [...mistakes.values()].sort((a,b)=>b.times-a.times).forEach(m=>{
+    const d=document.createElement("div"); d.className="miss";
+    d.innerHTML='<div class="mq"></div><div class="ma"></div><div class="mx"></div>';
+    d.children[0].textContent=m.q[2]; d.children[1].textContent="Correct: "+m.q[3];
+    d.children[2].textContent=`Missed ${m.times}× · ${m.q[0]} · ${m.q[1]}`+(m.q[7]?" · "+m.q[7]:"");
+    list.appendChild(d);
+  });
+}
+$("retryBtn").onclick=()=>{const p=[...mistakes.values()].map(m=>m.q);p.isRetry=true;startQuiz(p);};
+$("newBtn").onclick=()=>{quizView="setup";view("setup");};
+
+document.addEventListener("keydown",e=>{
+  if($("quiz").hidden) return;
+  const n=parseInt(e.key,10);
+  if(n>=1&&n<=4&&!answered){const b=$("opts").children[n-1]; if(b) b.click();}
+  if(e.key==="Enter"&&answered){e.preventDefault();$("nextBtn").click();}
+});
+
+/* ---------- Revise ---------- */
+let revS="SEP", revSel=Object.keys(NOTES.SEP)[0];
+chips($("revSubj"),[["SEP","SEP"],["AFA","AFA"]],revS,v=>{revS=v;revSel=Object.keys(NOTES[v])[0];revChips();renderRev();},{SEP:"sep",AFA:"afa"});
+function revChips(){
+  chips($("revChips"),[...Object.keys(NOTES[revS]).map(k=>[k,k]),["__QA",`All ${revS} Q&A`]],revSel,v=>{revSel=v;renderRev();});
+}
+function renderRev(){
+  const body=$("revBody"); body.innerHTML="";
+  if(revSel!=="__QA"){
+    const d=document.createElement("div"); d.className="note";
+    d.innerHTML=`<h3>${revSel}</h3>`+NOTES[revS][revSel]; body.appendChild(d); return;
+  }
+  const top=document.createElement("div"); top.className="panel switch";
+  const on=document.body.classList.contains("blur");
+  top.innerHTML=`<span>Tap a question to reveal its answer when answers are hidden.</span><button class="ghost" id="blurBtn" aria-pressed="${on}">${on?"Show answers":"Hide answers"}</button>`;
+  body.appendChild(top);
+  $("blurBtn").onclick=e=>{const v=document.body.classList.toggle("blur");e.target.setAttribute("aria-pressed",v);e.target.textContent=v?"Show answers":"Hide answers";};
+  const pool=BANK.filter(q=>q[0]===revS);
+  [...new Set(pool.map(q=>q[1]))].forEach(t=>{
+    const d=document.createElement("div"); d.className="note"; d.style.marginTop="12px";
+    d.innerHTML=`<h3></h3><ul class="qa"></ul>`; d.firstChild.textContent=t;
+    const ul=d.querySelector("ul");
+    pool.filter(q=>q[1]===t).forEach(q=>{
+      const li=document.createElement("li"); li.innerHTML='<div></div><div class="a"></div>';
+      li.children[0].textContent=q[2]; li.children[1].textContent=q[3]+(q[7]?" — "+q[7]:"");
+      li.onclick=()=>li.classList.toggle("show"); ul.appendChild(li);
+    });
+    body.appendChild(d);
+  });
+}
+revChips(); renderRev();
+
+</script>
+</body>
+</html>
